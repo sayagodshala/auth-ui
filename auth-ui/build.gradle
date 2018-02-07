@@ -1,34 +1,58 @@
 apply plugin: 'com.android.library'
 
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'auth-ui'
+
+    publishedGroupId = 'com.sayagodshala'
+    libraryName = 'AuthUI'
+    artifact = 'auth-ui'
+
+    libraryDescription = 'Android App Auth(Login, Signup and Forgot Password) UI'
+
+    siteUrl = 'https://github.com/sayagodshala/auth-ui'
+    gitUrl = 'https://github.com/sayagodshala/auth-ui.git'
+
+    libraryVersion = '0.1.1'
+
+    developerId = 'sayagodshala'
+    developerName = 'Saya Godshala'
+    developerEmail = 'sayagodshala@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
 android {
     compileSdkVersion 27
-
-
-
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation 'com.android.support:design:27.0.2'
 }
+
+//apply from: '../install.gradle'
+//apply from: '../bintray.gradle'
+
+apply from: 'https://raw.githubusercontent.com/sayagodshala/common-files/master/install.gradle'
+apply from: 'https://raw.githubusercontent.com/sayagodshala/common-files/master/bintray.gradle'

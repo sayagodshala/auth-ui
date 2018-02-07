@@ -1,2 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sayagodshala.authui" />
+    package="com.sayagodshala.authui" >
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+</manifest>
