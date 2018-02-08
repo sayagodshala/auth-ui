@@ -4,6 +4,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.sayagodshala.authui.AuthUIFragment;
+import com.sayagodshala.authui.AuthUISettings;
+import com.sayagodshala.authui.AuthView;
+
 
 public class LoginActivity extends AppCompatActivity implements AuthUIFragment.AuthUIFragmentListener{
 
