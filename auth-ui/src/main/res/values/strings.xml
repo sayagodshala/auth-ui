@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Auth</string>
     <string name="login_title">Login using your registered email and password.</string>
-    <string name="register_title">You are just few steps a head. Register and start a head.</string>
+    <string name="signup_title">You are just few steps a head. Register and start a head.</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="login_with_google">Login with Google</string>

@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,22 +18,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 
-public class AuthFragment extends Fragment implements View.OnClickListener {
 
-    public static String SOCIAL_PLATFORM_REQUIRED = "social_platform required";
-    public static String APP_LOGO = "app_logo";
-    public static String BG = "bg";
-    public static String TITLE = "title";
-    public static String NAME_HINT = "name_hint";
-    public static String EMAIL_HINT = "email_hint";
-    public static String MOBILE_HINT = "mobile_hint";
-    public static String PASSWORD_HINT = "password_hint";
-    public static String TERMS = "terms";
-    public static String LOGIN_API = "terms";
+public class AuthUIFragment extends Fragment implements View.OnClickListener {
+
+
+    public static String AUTHUI_SETTINGS = "authui_settings";
 
     private Bundle bundle;
-    private AuthFragmentListener mListener;
+    private AuthUIFragmentListener mListener;
 
     ImageView bg;
     ImageView appLogo;
@@ -53,14 +48,19 @@ public class AuthFragment extends Fragment implements View.OnClickListener {
     RelativeLayout google;
     TextView terms;
     TextView signinSignup;
+    TextView facebookTv;
+    TextView googleTv;
+    View socialDivider;
     private View view;
 
-    public AuthFragment() {
+    private AuthUISettings authUISettings;
+
+    public AuthUIFragment() {
         // Required empty public constructor
     }
 
-    public static AuthFragment newInstance(Bundle bundle) {
-        AuthFragment fragment = new AuthFragment();
+    public static AuthUIFragment newInstance(Bundle bundle) {
+        AuthUIFragment fragment = new AuthUIFragment();
         if (bundle != null)
             fragment.setArguments(bundle);
         return fragment;
@@ -92,11 +92,11 @@ public class AuthFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof AuthFragmentListener) {
-            mListener = (AuthFragmentListener) context;
+        if (context instanceof AuthUIFragmentListener) {
+            mListener = (AuthUIFragmentListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement AuthUIFragmentListener");
         }
     }
 
@@ -131,6 +131,8 @@ public class AuthFragment extends Fragment implements View.OnClickListener {
             if (mListener != null)
                 mListener.onGoogleClicked(layoutName.getVisibility() == View.VISIBLE);
         } else if (view.getId() == R.id.signin_signup) {
+            if (!authUISettings.isSignupRequired())
+                return;
             if (layoutName.getVisibility() == View.VISIBLE) {
                 setLoginView();
             } else {
@@ -139,7 +141,7 @@ public class AuthFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public interface AuthFragmentListener {
+    public interface AuthUIFragmentListener {
         void onLoginClicked(String username, String password);
 
         void onSignupClicked(String name, String email, String mobile, String password);
@@ -169,6 +171,9 @@ public class AuthFragment extends Fragment implements View.OnClickListener {
         google = view.findViewById(R.id.google);
         terms = view.findViewById(R.id.terms);
         signinSignup = view.findViewById(R.id.signin_signup);
+        facebookTv = view.findViewById(R.id.facebook_tv);
+        googleTv = view.findViewById(R.id.google_tv);
+        socialDivider = view.findViewById(R.id.social_divider);
     }
 
     private void setClickListener() {
@@ -179,45 +184,99 @@ public class AuthFragment extends Fragment implements View.OnClickListener {
     }
 
     private void bindData() {
+        bundle = getArguments();
         if (bundle != null) {
 
-            if (bundle.containsKey(SOCIAL_PLATFORM_REQUIRED) && !bundle.getBoolean(SOCIAL_PLATFORM_REQUIRED)) {
-                socials.setVisibility(View.GONE);
-                orCont.setVisibility(View.GONE);
+            if (bundle.containsKey(AUTHUI_SETTINGS)) {
+                authUISettings = (AuthUISettings) bundle.getParcelable(AUTHUI_SETTINGS);
             }
 
-            if (bundle.containsKey(APP_LOGO)) {
-                appLogo.setVisibility(View.VISIBLE);
-                appLogo.setImageResource(bundle.getInt(APP_LOGO));
-            }
+            Log.d("AuthUISettings",new Gson().toJson(authUISettings));
 
-            if (bundle.containsKey(BG)) {
-                bg.setImageResource(bundle.getInt(BG));
-            }
+            if (authUISettings != null) {
 
-            if (bundle.containsKey(TITLE)) {
-                title.setText(bundle.getString(TITLE));
-            }
+                if(!authUISettings.isFacebookLoginRequired() && !authUISettings.isGoogleLoginRequired()){
+                    authUISettings.setSocialPlatformRequired(false);
+                }
 
-            if (bundle.containsKey(TERMS)) {
-                terms.setText(bundle.getString(TERMS));
+                if (!authUISettings.isSocialPlatformRequired()) {
+                    socials.setVisibility(View.GONE);
+                    orCont.setVisibility(View.GONE);
+                }
+
+                if(!authUISettings.isFacebookLoginRequired()) {
+                    socialDivider.setVisibility(View.GONE);
+                    fb.setVisibility(View.GONE);
+                }
+
+                if(!authUISettings.isGoogleLoginRequired()) {
+                    socialDivider.setVisibility(View.GONE);
+                    google.setVisibility(View.GONE);
+                }
+
+                if (!authUISettings.isAppLogoRequired()) {
+                    appLogo.setVisibility(View.VISIBLE);
+                } else {
+                    if (authUISettings.getAppLogo() != 0) {
+                        appLogo.setImageResource(authUISettings.getAppLogo());
+                    }
+                }
+
+                if (authUISettings.getBg() != 0) {
+                    bg.setImageResource(authUISettings.getBg());
+                }
+
+                if(!authUISettings.isSignupRequired())
+                    signinSignup.setVisibility(View.GONE);
+
+                if (authUISettings.getDefaultView() == AuthView.LOGIN) {
+                    setLoginView();
+                } else {
+                    setSignupView();
+                }
+
             }
         }
     }
 
     private void setLoginView() {
-        layoutName.setVisibility(View.GONE);
-        layoutMobile.setVisibility(View.GONE);
-        signinSignup.setText(getString(R.string.dont_have_account));
-        proceed.setText(getString(R.string.loggin));
+        if (authUISettings != null) {
+            layoutName.setVisibility(View.GONE);
+            layoutMobile.setVisibility(View.GONE);
+            forgotPassword.setVisibility(View.VISIBLE);
+            title.setText(authUISettings.getLoginTitle());
+            terms.setText(authUISettings.getLoginTerms());
+            if(authUISettings.isSocialPlatformRequired()) {
+                facebookTv.setText(authUISettings.getFacebookLoginTitle());
+                googleTv.setText(authUISettings.getGoogleLoginTitle());
+            }
+
+            if(authUISettings.isSignupRequired()) {
+                signinSignup.setText(authUISettings.getSignupToggleTitle());
+            }
+            proceed.setText(getString(R.string.loggin));
+        }
     }
 
     private void setSignupView() {
-        layoutName.setVisibility(View.VISIBLE);
-        layoutMobile.setVisibility(View.VISIBLE);
-        signinSignup.setText(getString(R.string.have_an_account));
-        proceed.setText(getString(R.string.signup));
+        if (authUISettings != null) {
+            layoutName.setVisibility(View.VISIBLE);
+            layoutMobile.setVisibility(View.VISIBLE);
+            forgotPassword.setVisibility(View.GONE);
+            title.setText(authUISettings.getSignupTitle());
+            terms.setText(authUISettings.getSignupTerms());
+            if(authUISettings.isSocialPlatformRequired()) {
+                facebookTv.setText(authUISettings.getFacebookSignupTitle());
+                googleTv.setText(authUISettings.getGoogleSignupTitle());
+            }
+
+            if(authUISettings.isSignupRequired()) {
+                signinSignup.setText(authUISettings.getLoginToggleTitle());
+            }
+            proceed.setText(getString(R.string.signup));
+        }
     }
+
 
     private boolean isSignInValid() {
         String validationMessage = "";
@@ -296,7 +355,7 @@ public class AuthFragment extends Fragment implements View.OnClickListener {
 
     public void showSnackBar(String message) {
         Snackbar snackbar = Snackbar
-                .make(view.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG);
+                .make(getActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG);
         snackbar.show();
     }
 }
