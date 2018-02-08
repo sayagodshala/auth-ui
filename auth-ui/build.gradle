@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/sayagodshala/auth-ui'
     gitUrl = 'https://github.com/sayagodshala/auth-ui.git'
 
-    libraryVersion = '0.1.1'
+    libraryVersion = '0.1.2'
 
     developerId = 'sayagodshala'
     developerName = 'Saya Godshala'
