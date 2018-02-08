@@ -142,7 +142,7 @@ authUISettings.setGoogleLoginRequired(false);
 <section>
     <img width="300" src="https://raw.githubusercontent.com/sayagodshala/auth-ui/master/screenshots/cyan.jpg">
     <img width="300" src="https://raw.githubusercontent.com/sayagodshala/auth-ui/master/screenshots/teal.jpg">
-    <img width="300" src="https://raw.githubusercontent.com/sayagodshala/auth-ui/master/screenshots/white.jpg">
+    <img width="300" src="https://raw.githubusercontent.com/sayagodshala/auth-ui/master/screenshots/default.jpg">
 </section>
 
 # Included Libraries
