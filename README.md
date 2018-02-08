@@ -67,7 +67,7 @@ authUISettings.setSignupToggleTitle("Don\'t have an account? <b>SIGN UP</b>");
 authUISettings.setDefaultView(AuthUIView.LOGIN);
 authUISettings.setMaterialTheme(MaterialTheme.CYAN);
 ```
-Next step is to load the `AuthUIFragment` in your Activity.
+Next step is to load the `AuthUIFragment` with settings in your Activity.
 
 ```java
 AuthUIFragment.loadFragment(this, AuthUIFragment.newInstance(authUISettings), R.id.frame);
@@ -109,10 +109,47 @@ This is the simplest way to configure the library to enable Custom login mode al
 
 **That's it!**
 
+# More about AuthUISettings
+
+To hide social platforms use below code
+
+```java
+authUISettings.setSocialPlatformRequired(false);
+```
+
+To hide logo use below code
+
+```java
+authUISettings.setAppLogoRequired(false);
+```
+
+In case your app only requires login
+
+```java
+authUISettings.setSignupRequired(false);
+```
+
+In case your app only requires one of the below
+
+```java
+authUISettings.setFacebookLoginRequired(false);
+**OR**
+authUISettings.setGoogleLoginRequired(false);
+```
+
+### Result
+
+<section>
+    <img width="300" src="https://raw.githubusercontent.com/sayagodshala/auth-ui/master/screenshots/cyan.jpg">
+    <img width="300" src="https://raw.githubusercontent.com/sayagodshala/auth-ui/master/screenshots/teal.jpg">
+    <img width="300" src="https://raw.githubusercontent.com/sayagodshala/auth-ui/master/screenshots/white.jpg">
+</section>
+
 # Included Libraries
 The following third-party libraries were used in this framework.
 
 - GSON library
+
 
 # Contribution
 All contributions are welcome. Encounter any issue? Don't hesitate to [open an issue](https://github.com/sayagodshala/auth-ui/issues)
