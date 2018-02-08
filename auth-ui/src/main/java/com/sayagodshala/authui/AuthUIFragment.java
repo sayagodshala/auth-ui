@@ -1,16 +1,26 @@
 package com.sayagodshala.authui;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,6 +33,8 @@ import com.google.gson.Gson;
 
 public class AuthUIFragment extends Fragment implements View.OnClickListener {
 
+
+    public static final String TAG = "AuthUIFragment";
 
     public static String AUTHUI_SETTINGS = "authui_settings";
 
@@ -44,12 +56,14 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
     TextView forgotPassword;
     LinearLayout orCont;
     LinearLayout socials;
+    LinearLayout belowCont;
     RelativeLayout fb;
     RelativeLayout google;
     TextView terms;
     TextView signinSignup;
     TextView facebookTv;
     TextView googleTv;
+    TextView or;
     View socialDivider;
     private View view;
 
@@ -59,17 +73,22 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
-    public static AuthUIFragment newInstance(Bundle bundle) {
+    public static AuthUIFragment newInstance(AuthUISettings authUISettings) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(AUTHUI_SETTINGS, authUISettings);
         AuthUIFragment fragment = new AuthUIFragment();
         if (bundle != null)
             fragment.setArguments(bundle);
         return fragment;
     }
 
+    public static void loadFragment(FragmentActivity activity, android.support.v4.app.Fragment f, int frameId) {
+        activity.getSupportFragmentManager().beginTransaction().add(frameId, f, TAG).addToBackStack(AuthUIFragment.TAG).commitAllowingStateLoss();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        bundle = getArguments();
     }
 
     @Override
@@ -77,10 +96,16 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_auth, container, false);
-        bindView(view);
-        bindData();
-        setClickListener();
-        setLoginView();
+        bundle = getArguments();
+        if (bundle != null && bundle.containsKey(AUTHUI_SETTINGS)) {
+            authUISettings = (AuthUISettings) bundle.getParcelable(AUTHUI_SETTINGS);
+            Log.d("AuthUISettings", new Gson().toJson(authUISettings));
+            bindView(view);
+            setClickListener();
+            bindData();
+        } else {
+            getActivity().getFragmentManager().popBackStack();
+        }
         return view;
     }
 
@@ -116,11 +141,20 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
                     }
                 }
             } else {
-                if (isSignInValid()) {
-                    if (mListener != null) {
-                        mListener.onLoginClicked(email.getText().toString(), password.getText().toString());
+                if (!proceed.getText().toString().equalsIgnoreCase("Login")) {
+                    if (isSignInValid()) {
+                        if (mListener != null) {
+                            mListener.onLoginClicked(email.getText().toString(), password.getText().toString());
+                        }
+                    }
+                } else {
+                    if (isForgotPasswordValid()) {
+                        if (mListener != null) {
+                            mListener.onForgotPasswordClicked(email.getText().toString());
+                        }
                     }
                 }
+
             }
 
         } else if (view.getId() == R.id.fb) {
@@ -138,6 +172,8 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
             } else {
                 setSignupView();
             }
+        } else if (view.getId() == R.id.forgot_password) {
+            setForgotPasswordView();
         }
     }
 
@@ -145,6 +181,8 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
         void onLoginClicked(String username, String password);
 
         void onSignupClicked(String name, String email, String mobile, String password);
+
+        void onForgotPasswordClicked(String email);
 
         void onFacebookClicked(boolean isRegistration);
 
@@ -173,7 +211,9 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
         signinSignup = view.findViewById(R.id.signin_signup);
         facebookTv = view.findViewById(R.id.facebook_tv);
         googleTv = view.findViewById(R.id.google_tv);
+        or = view.findViewById(R.id.or);
         socialDivider = view.findViewById(R.id.social_divider);
+        belowCont = view.findViewById(R.id.below_cont);
     }
 
     private void setClickListener() {
@@ -181,21 +221,15 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
         proceed.setOnClickListener(this);
         google.setOnClickListener(this);
         fb.setOnClickListener(this);
+        forgotPassword.setOnClickListener(this);
     }
 
     private void bindData() {
-        bundle = getArguments();
         if (bundle != null) {
-
-            if (bundle.containsKey(AUTHUI_SETTINGS)) {
-                authUISettings = (AuthUISettings) bundle.getParcelable(AUTHUI_SETTINGS);
-            }
-
-            Log.d("AuthUISettings",new Gson().toJson(authUISettings));
 
             if (authUISettings != null) {
 
-                if(!authUISettings.isFacebookLoginRequired() && !authUISettings.isGoogleLoginRequired()){
+                if (!authUISettings.isFacebookLoginRequired() && !authUISettings.isGoogleLoginRequired()) {
                     authUISettings.setSocialPlatformRequired(false);
                 }
 
@@ -204,12 +238,12 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
                     orCont.setVisibility(View.GONE);
                 }
 
-                if(!authUISettings.isFacebookLoginRequired()) {
+                if (!authUISettings.isFacebookLoginRequired()) {
                     socialDivider.setVisibility(View.GONE);
                     fb.setVisibility(View.GONE);
                 }
 
-                if(!authUISettings.isGoogleLoginRequired()) {
+                if (!authUISettings.isGoogleLoginRequired()) {
                     socialDivider.setVisibility(View.GONE);
                     google.setVisibility(View.GONE);
                 }
@@ -222,18 +256,22 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
                     }
                 }
 
-                if (authUISettings.getBg() != 0) {
-                    bg.setImageResource(authUISettings.getBg());
-                }
-
-                if(!authUISettings.isSignupRequired())
+                if (!authUISettings.isSignupRequired())
                     signinSignup.setVisibility(View.GONE);
 
-                if (authUISettings.getDefaultView() == AuthView.LOGIN) {
-                    setLoginView();
-                } else {
-                    setSignupView();
+                switch (authUISettings.getDefaultView()) {
+                    case LOGIN:
+                        setLoginView();
+                        break;
+                    case SIGNUP:
+                        setSignupView();
+                        break;
+                    default:
+                        setForgotPasswordView();
+                        break;
                 }
+
+                applyTheme();
 
             }
         }
@@ -243,15 +281,20 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
         if (authUISettings != null) {
             layoutName.setVisibility(View.GONE);
             layoutMobile.setVisibility(View.GONE);
-            forgotPassword.setVisibility(View.VISIBLE);
+            if (!authUISettings.isForgotPasswordRequired()) {
+                forgotPassword.setVisibility(View.GONE);
+            } else {
+                forgotPassword.setVisibility(View.VISIBLE);
+            }
+            belowCont.setVisibility(View.VISIBLE);
             title.setText(authUISettings.getLoginTitle());
             terms.setText(authUISettings.getLoginTerms());
-            if(authUISettings.isSocialPlatformRequired()) {
+            if (authUISettings.isSocialPlatformRequired()) {
                 facebookTv.setText(authUISettings.getFacebookLoginTitle());
                 googleTv.setText(authUISettings.getGoogleLoginTitle());
             }
 
-            if(authUISettings.isSignupRequired()) {
+            if (authUISettings.isSignupRequired()) {
                 signinSignup.setText(authUISettings.getSignupToggleTitle());
             }
             proceed.setText(getString(R.string.loggin));
@@ -265,15 +308,29 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
             forgotPassword.setVisibility(View.GONE);
             title.setText(authUISettings.getSignupTitle());
             terms.setText(authUISettings.getSignupTerms());
-            if(authUISettings.isSocialPlatformRequired()) {
+            belowCont.setVisibility(View.VISIBLE);
+            if (authUISettings.isSocialPlatformRequired()) {
                 facebookTv.setText(authUISettings.getFacebookSignupTitle());
                 googleTv.setText(authUISettings.getGoogleSignupTitle());
             }
 
-            if(authUISettings.isSignupRequired()) {
+            if (authUISettings.isSignupRequired()) {
                 signinSignup.setText(authUISettings.getLoginToggleTitle());
             }
             proceed.setText(getString(R.string.signup));
+        }
+    }
+
+    private void setForgotPasswordView() {
+        if (authUISettings != null) {
+            layoutName.setVisibility(View.GONE);
+            layoutMobile.setVisibility(View.GONE);
+            layoutEmail.setVisibility(View.VISIBLE);
+            layoutPassword.setVisibility(View.GONE);
+            title.setText(authUISettings.getForgotPasswordTitle());
+            belowCont.setVisibility(View.GONE);
+            signinSignup.setVisibility(View.GONE);
+            proceed.setText(getString(R.string.submit));
         }
     }
 
@@ -304,7 +361,7 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
         if (textIsEmpty(nameStr)) {
             name.requestFocus();
             validationMessage = "Please enter name";
-        } else if (isValidEmail(emailStr)) {
+        } else if (!isValidEmail(emailStr)) {
             email.requestFocus();
             validationMessage = "Please enter valid email";
         } else if (textIsEmpty(mobileStr)) {
@@ -321,26 +378,32 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
         return validationMessage.length() == 0;
     }
 
-    public static boolean textIsEmpty(String value) {
+    private boolean isForgotPasswordValid() {
+        String validationMessage = "";
+        String emailStr = email.getText().toString().trim();
+        if (!isValidEmail(emailStr)) {
+            email.requestFocus();
+            validationMessage = "Please enter valid email";
+        }
 
+        if (validationMessage.length() != 0)
+            showSnackBar(validationMessage);
+
+        return validationMessage.length() == 0;
+    }
+
+    public static boolean textIsEmpty(String value) {
         if (value == null)
             return true;
-
-
         boolean empty = false;
-
         String message = value.trim();
-
         if (TextUtils.isEmpty(message)) {
             empty = true;
         }
-
         boolean isWhitespace = message.matches("^\\s*$");
-
         if (isWhitespace) {
             empty = true;
         }
-
         return empty;
     }
 
@@ -358,4 +421,67 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
                 .make(getActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG);
         snackbar.show();
     }
+
+    public static StateListDrawable selectorBackgroundColor(int normal, int pressed) {
+        GradientDrawable normalDrawable = new GradientDrawable();
+        normalDrawable.setColor(normal);
+        normalDrawable.setCornerRadius(8);
+        GradientDrawable pressedDrawable = new GradientDrawable();
+        pressedDrawable.setColor(pressed);
+        pressedDrawable.setCornerRadius(8);
+        StateListDrawable states = new StateListDrawable();
+        states.addState(new int[]{android.R.attr.state_pressed},
+                pressedDrawable);
+        states.addState(new int[]{}, normalDrawable);
+        return states;
+    }
+
+    private void applyTheme() {
+        if (authUISettings != null) {
+
+            MaterialTheme materialTheme = authUISettings.getMaterialTheme();
+            MaterialColor materialColor = materialTheme.getColor();
+
+            if (authUISettings.getBg() != 0) {
+                bg.setImageResource(authUISettings.getBg());
+            } else {
+                bg.setBackgroundColor(getResources().getColor(materialColor.getRegular()));
+            }
+
+            appLogo.setColorFilter(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+
+            title.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+            forgotPassword.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+            terms.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+            proceed.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+
+            email.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+            mobile.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+            name.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+            password.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+            or.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+
+            proceed.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+            proceed.setBackgroundDrawable(selectorBackgroundColor(getResources().getColor(materialColor.getLight()), getResources().getColor(materialColor.getDark())));
+
+            if (materialTheme.equals(MaterialTheme.INDIGO)) {
+                fb.setBackgroundDrawable(selectorBackgroundColor(getResources().getColor(materialColor.getLight()), getResources().getColor(materialColor.getDark())));
+            } else if (materialTheme.equals(MaterialTheme.PINK)) {
+                google.setBackgroundDrawable(selectorBackgroundColor(getResources().getColor(materialColor.getLight()), getResources().getColor(materialColor.getDark())));
+            } else if (materialTheme.equals(MaterialTheme.RED)) {
+                google.setBackgroundDrawable(selectorBackgroundColor(getResources().getColor(materialColor.getLight()), getResources().getColor(materialColor.getDark())));
+            }
+
+            signinSignup.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getActivity().getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(ContextCompat.getColor(getContext(), materialColor.getRegular()));
+            }
+
+        }
+    }
+
+
 }

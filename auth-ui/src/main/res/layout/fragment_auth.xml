@@ -10,14 +10,12 @@
         android:id="@+id/bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
         android:scaleType="centerCrop" />
 
     <ImageView
         android:id="@+id/app_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
@@ -34,14 +32,11 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_margin="16dp"
         android:gravity="center"
         android:lines="2"
         android:text="@string/login_title"
-        android:textSize="15sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,11 +48,9 @@
         android:id="@+id/layout_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:layout_weight="1"
-        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -71,16 +64,16 @@
             android:layout_height="wrap_content"
             android:hint="Name"
             android:inputType="textPersonName"
-            android:maxLength="50"
-            android:textColor="@color/white" />
+            android:maxLength="50" />
+
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/layout_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:layout_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -95,16 +88,15 @@
             android:layout_height="wrap_content"
             android:hint="Email"
             android:inputType="textEmailAddress"
-            android:maxLength="50"
-            android:textColor="@color/white" />
+            android:maxLength="50" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/layout_mobile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:layout_weight="1"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -120,16 +112,15 @@
             android:layout_height="wrap_content"
             android:hint="Mobile"
             android:inputType="number"
-            android:maxLength="10"
-            android:textColor="@color/white" />
+            android:maxLength="10" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/layout_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:layout_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -153,12 +144,14 @@
         android:id="@+id/proceed"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
         android:background="@drawable/btn_white"
         android:gravity="center"
         android:text="Login"
         android:textAllCaps="true"
+        style="?android:attr/borderlessButtonStyle"
         android:textColor="@color/colorPrimary"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -171,10 +164,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -188,15 +178,16 @@
             android:layout_gravity="center_horizontal"
             android:layout_centerHorizontal="true"
             android:text="@string/forgot_password"
-            android:textSize="12sp" />
+            android:layout_marginBottom="16dp"
+            android:textSize="16sp" />
 
 
         <LinearLayout
             android:id="@+id/or_cont"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
             android:orientation="horizontal">
 
             <View
@@ -214,7 +205,8 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
                 android:text="or"
-                android:textSize="14sp"
+                android:id="@+id/or"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -235,7 +227,6 @@
             android:id="@+id/socials"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
             <RelativeLayout
@@ -298,17 +289,14 @@
             android:id="@+id/terms"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/loggin_terms"
-            android:textSize="12sp"
+            android:textSize="14sp"
             />
 
 
     </LinearLayout>
-
-
-
-
 
     <TextView
         android:id="@+id/signin_signup"
@@ -320,7 +308,7 @@
         android:tag="0"
         android:text="@string/dont_have_account"
         android:textColor="@color/dark_grey"
-        android:textSize="12sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

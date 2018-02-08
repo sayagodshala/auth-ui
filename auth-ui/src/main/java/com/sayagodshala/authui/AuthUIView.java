@@ -1,12 +1,13 @@
 package com.sayagodshala.authui;
 
-public enum AuthView {
+public enum AuthUIView {
     LOGIN("login"),
-    SIGNUP("signup");
+    SIGNUP("signup"),
+    FORGOT_PASSWORD("signup");
 
     private final String description;
 
-    AuthView(String desc) {
+    AuthUIView(String desc) {
         this.description = desc;
     }
 

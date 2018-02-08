@@ -2,6 +2,7 @@
     <string name="app_name">Auth</string>
     <string name="login_title">Login using your registered email and password.</string>
     <string name="signup_title">You are just few steps a head. Register and start a head.</string>
+    <string name="forgot_password_title">Put in your email id for password reset link</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="login_with_google">Login with Google</string>
@@ -11,6 +12,7 @@
     <string name="dont_have_account">Don\'t have an account? <b>SIGN UP</b></string>
     <string name="loggin">Login</string>
     <string name="signup">Sign Up</string>
+    <string name="submit">Submit</string>
     <string name="loggin_terms">By Logging in I agree to the <b>Terms of Use</b></string>
     <string name="signup_terms">By Signing up I agree to the <b>Terms of Use</b></string>
 

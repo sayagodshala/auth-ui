@@ -11,11 +11,14 @@ public class AuthUISettings implements Parcelable {
     private boolean signupRequired = true;
     private boolean facebookLoginRequired = true;
     private boolean googleLoginRequired = true;
-    private AuthView defaultView = AuthView.LOGIN;
+    private boolean forgotPasswordRequired = true;
+    private AuthUIView defaultView = AuthUIView.LOGIN;
+    private MaterialTheme materialTheme = MaterialTheme.BLUE_GREY;
     private int appLogo;
     private int bg;
     private String loginTitle;
     private String signupTitle;
+    private String forgotPasswordTitle;
     private String nameHint;
     private String emailHint;
     private String mobileHint;
@@ -81,12 +84,28 @@ public class AuthUISettings implements Parcelable {
         this.googleLoginRequired = googleLoginRequired;
     }
 
-    public AuthView getDefaultView() {
+    public boolean isForgotPasswordRequired() {
+        return forgotPasswordRequired;
+    }
+
+    public void setForgotPasswordRequired(boolean forgotPasswordRequired) {
+        this.forgotPasswordRequired = forgotPasswordRequired;
+    }
+
+    public AuthUIView getDefaultView() {
         return defaultView;
     }
 
-    public void setDefaultView(AuthView defaultView) {
+    public void setDefaultView(AuthUIView defaultView) {
         this.defaultView = defaultView;
+    }
+
+    public MaterialTheme getMaterialTheme() {
+        return materialTheme;
+    }
+
+    public void setMaterialTheme(MaterialTheme materialTheme) {
+        this.materialTheme = materialTheme;
     }
 
     public int getAppLogo() {
@@ -119,6 +138,14 @@ public class AuthUISettings implements Parcelable {
 
     public void setSignupTitle(String signupTitle) {
         this.signupTitle = signupTitle;
+    }
+
+    public String getForgotPasswordTitle() {
+        return forgotPasswordTitle;
+    }
+
+    public void setForgotPasswordTitle(String forgotPasswordTitle) {
+        this.forgotPasswordTitle = forgotPasswordTitle;
     }
 
     public String getNameHint() {
@@ -231,11 +258,14 @@ public class AuthUISettings implements Parcelable {
         dest.writeByte(this.signupRequired ? (byte) 1 : (byte) 0);
         dest.writeByte(this.facebookLoginRequired ? (byte) 1 : (byte) 0);
         dest.writeByte(this.googleLoginRequired ? (byte) 1 : (byte) 0);
-        dest.writeInt(this.defaultView == null ? -1 : this.defaultView.ordinal());
+        dest.writeByte(this.forgotPasswordRequired ? (byte) 1 : (byte) 0);
+        dest.writeString(this.defaultView.name());
+        dest.writeString(this.materialTheme.name());
         dest.writeInt(this.appLogo);
         dest.writeInt(this.bg);
         dest.writeString(this.loginTitle);
         dest.writeString(this.signupTitle);
+        dest.writeString(this.forgotPasswordTitle);
         dest.writeString(this.nameHint);
         dest.writeString(this.emailHint);
         dest.writeString(this.mobileHint);
@@ -257,12 +287,14 @@ public class AuthUISettings implements Parcelable {
         this.signupRequired = in.readByte() != 0;
         this.facebookLoginRequired = in.readByte() != 0;
         this.googleLoginRequired = in.readByte() != 0;
-        int tmpDefaultView = in.readInt();
-        this.defaultView = tmpDefaultView == -1 ? null : AuthView.values()[tmpDefaultView];
+        this.forgotPasswordRequired = in.readByte() != 0;
+        this.defaultView = AuthUIView.valueOf(in.readString());
+        this.materialTheme = MaterialTheme.valueOf(in.readString());
         this.appLogo = in.readInt();
         this.bg = in.readInt();
         this.loginTitle = in.readString();
         this.signupTitle = in.readString();
+        this.forgotPasswordTitle = in.readString();
         this.nameHint = in.readString();
         this.emailHint = in.readString();
         this.mobileHint = in.readString();

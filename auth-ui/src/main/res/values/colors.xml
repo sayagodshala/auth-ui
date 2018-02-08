@@ -3,11 +3,56 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="black">#000000</color>
     <color name="white">#ffffff</color>
-    <color name="grey">#c7c7c7</color>
+    <color name="grey">#FFBEBDBD</color>
     <color name="dark_grey">#8f8f8f</color>
     <color name="facebook">#3b5998</color>
     <color name="facebook_dark">#263d6e</color>
+    <color name="facebook_dark2">#18294b</color>
     <color name="google">#d34836</color>
     <color name="google_dark">#a93425</color>
+
+    <!--Material Colors-->
+    <color name="mat_red">#F44336</color>
+    <color name="mat_red_light_dark">#C62828</color>
+    <color name="mat_red_dark">#F44336</color>
+
+    <color name="mat_pink">#E91E63</color>
+    <color name="mat_pink_light_dark">#AD1457</color>
+    <color name="mat_pink_dark">#880E4F</color>
+
+    <color name="mat_purple">#9C27B0</color>
+    <color name="mat_purple_light_dark">#6A1B9A</color>
+    <color name="mat_purple_dark">#4A148C</color>
+
+    <color name="mat_deep_purple">#673AB7</color>
+    <color name="mat_deep_purple_light_dark">#4527A0</color>
+    <color name="mat_deep_purple_dark">#311B92</color>
+
+    <color name="mat_indigo">#3F51B5</color>
+    <color name="mat_indigo_light_dark">#283593</color>
+    <color name="mat_indigo_dark">#1A237E</color>
+
+    <color name="mat_blue">#2196F3</color>
+    <color name="mat_blue_light_dark">#1565C0</color>
+    <color name="mat_blue_dark">#0D47A1</color>
+
+    <color name="mat_light_blue">#03A9F4</color>
+    <color name="mat_light_blue_light_dark">#0277BD</color>
+    <color name="mat_light_blue_dark">#01579B</color>
+
+    <color name="mat_cyan">#00BCD4</color>
+    <color name="mat_cyan_light_dark">#00838F</color>
+    <color name="mat_cyan_dark">#006064</color>
+
+    <color name="mat_teal">#009688</color>
+    <color name="mat_teal_light_dark">#00695C</color>
+    <color name="mat_teal_dark">#004D40</color>
+
+    <color name="mat_blue_grey">#607D8B</color>
+    <color name="mat_blue_grey_light_dark">#37474F</color>
+    <color name="mat_blue_grey_dark">#263238</color>
+    <!---->
+
 </resources>
