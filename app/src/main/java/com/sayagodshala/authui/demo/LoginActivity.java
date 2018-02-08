@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity implements AuthUIFragment.A
         authUISettings.setLoginToggleTitle(getString(R.string.have_an_account));
         authUISettings.setSignupToggleTitle(getString(R.string.dont_have_account));
         authUISettings.setDefaultView(AuthUIView.LOGIN);
-        authUISettings.setMaterialTheme(MaterialTheme.TEAL);
+        authUISettings.setMaterialTheme(MaterialTheme.CYAN);
 
         AuthUIFragment.loadFragment(this, AuthUIFragment.newInstance(authUISettings), R.id.frame);
     }

@@ -83,7 +83,7 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
     }
 
     public static void loadFragment(FragmentActivity activity, android.support.v4.app.Fragment f, int frameId) {
-        activity.getSupportFragmentManager().beginTransaction().add(frameId, f, TAG).addToBackStack(AuthUIFragment.TAG).commitAllowingStateLoss();
+        activity.getSupportFragmentManager().beginTransaction().add(frameId, f, TAG).commitAllowingStateLoss();
     }
 
     @Override
@@ -141,7 +141,7 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
                     }
                 }
             } else {
-                if (!proceed.getText().toString().equalsIgnoreCase("Login")) {
+                if (proceed.getText().toString().equalsIgnoreCase("login")) {
                     if (isSignInValid()) {
                         if (mListener != null) {
                             mListener.onLoginClicked(email.getText().toString(), password.getText().toString());
@@ -150,6 +150,8 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
                 } else {
                     if (isForgotPasswordValid()) {
                         if (mListener != null) {
+                            email.setText("");
+                            bindData();
                             mListener.onForgotPasswordClicked(email.getText().toString());
                         }
                     }
@@ -256,7 +258,9 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
                     }
                 }
 
-                if (!authUISettings.isSignupRequired())
+                if (authUISettings.isSignupRequired())
+                    signinSignup.setVisibility(View.VISIBLE);
+                else
                     signinSignup.setVisibility(View.GONE);
 
                 switch (authUISettings.getDefaultView()) {
@@ -281,6 +285,8 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
         if (authUISettings != null) {
             layoutName.setVisibility(View.GONE);
             layoutMobile.setVisibility(View.GONE);
+            layoutPassword.setVisibility(View.VISIBLE);
+            layoutEmail.setVisibility(View.VISIBLE);
             if (!authUISettings.isForgotPasswordRequired()) {
                 forgotPassword.setVisibility(View.GONE);
             } else {
