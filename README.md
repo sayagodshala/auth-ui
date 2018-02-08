@@ -21,7 +21,7 @@ Android App Auth(Login, Signup and Forgot Password) UI
 The **Auth UI** library is pushed to jcenter, so you need to add the following dependency to your app's `build.gradle`.
 
 ```gradle
-compile 'com.sayagodshala:auth-ui:0.1.3'
+compile 'com.sayagodshala:auth-ui:1.0'
 ```
 
 ### As a module
