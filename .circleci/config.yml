@@ -30,7 +30,7 @@ jobs:
 
       - run:
           name: Ensure Android SDK install is up-to-date
-          command: -sh .circleci/ci-scripts/ensure-sdkmanager.sh
+          command: - sh .circleci/ci-scripts/ensure-sdkmanager.sh
 
       # Download and cache dependencies
       - restore_cache:
