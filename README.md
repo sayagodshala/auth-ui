@@ -17,7 +17,7 @@ Android App Auth(Login, Signup and Forgot Password) UI
 
 Basic Form | Signup without Social Platforms | Login without Social Platforms
 ---- | ---- | ----
-![Default picker](<img width="300" height="533" src="screenshots/1.jpg">) | ![Simple picker](<img width="300" height="533" src="screenshots/3.jpg">) | ![Custom picker](<img width="300" height="533" src="screenshots/2.jpg">)
+!<img width="300" height="533" src="screenshots/1.jpg"> | !<img width="300" height="533" src="screenshots/3.jpg"> | !<img width="300" height="533" src="screenshots/2.jpg">
 
 
 # What's in the box
