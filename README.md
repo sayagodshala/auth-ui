@@ -203,11 +203,9 @@ authUISettings.setMaterialTheme(MaterialTheme.BLUE_GREY);
 
 ### Result
 
-<section>
-    <img width="300" src="https://raw.githubusercontent.com/sayagodshala/auth-ui/master/screenshots/cyan.jpg">
-    <img width="300" src="https://raw.githubusercontent.com/sayagodshala/auth-ui/master/screenshots/teal.jpg">
-    <img width="300" src="https://raw.githubusercontent.com/sayagodshala/auth-ui/master/screenshots/default.jpg">
-</section>
+CYAN | TEAL | WHITE/DEFAULT
+---- | ---- | ----
+<img width="300" height="533" src="screenshots/cyan.jpg"> | <img width="300" height="533" src="screenshots/teal.jpg"> | <img width="300" height="533" src="screenshots/default.jpg">
 
 # Included Libraries
 The following third-party libraries were used in this framework.
