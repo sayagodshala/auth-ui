@@ -1,4 +1,12 @@
 language: android
+
+sudo: false
+
+jdk: oraclejdk8
+
+before_install:
+  - yes | sdkmanager "platforms;android-27"
+
 android:
   components:
     - tools
@@ -6,8 +14,8 @@ android:
     - build-tools-27.0.2
     - android-27
     - extra-android-m2repository
+    - extra-google-m2repository
 
-jdk: oraclejdk8
 
 notifications:
   email: false
@@ -19,8 +27,7 @@ script:
   # By default Travis-ci executes './gradlew build connectedCheck' if no 'script:' section found.
   - ./gradlew build
 
-before_install:
-  - yes | sdkmanager "platforms;android-27"
-
-checkout: post: - cp local.properties.ci local.properties
+cache:
+  directories:
+   - $HOME/.gradle
 
