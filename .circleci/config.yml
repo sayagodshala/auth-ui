@@ -21,7 +21,8 @@ jobs:
       # Customize the JVM maximum heap limit
       JVM_OPTS: -Xmx3200m
       TERM: dumb
-      ANDROID_HOME: /opt/android/sdk
+#      ANDROID_HOME: /opt/android/sdk
+      ANDROID_HOME: /usr/local/android-sdk-linux
 
     
     steps:
@@ -38,6 +39,12 @@ jobs:
 
       - save_cache:
           paths:
+          # Android SDK
+            - /usr/local/android-sdk-linux/tools
+            - /usr/local/android-sdk-linux/platform-tools
+            - /usr/local/android-sdk-linux/build-tools
+            - /usr/local/android-sdk-linux/licenses
+            - /usr/local/android-sdk-linux/extras/google/m2repository
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
         
