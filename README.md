@@ -28,8 +28,6 @@ Basic Form | Signup without Social Platforms | Login without Social Platforms
 - Setup material theme like Teal, Cyan, Indigo and many more.
 - Hide and Show social logins.
 
-![Basic Form](https://raw.githubusercontent.com/sayagodshala/auth-ui/master/screenshots/1.jpg "Basic Form")
-
 # Setup
 ## 1. Include in your project
 
