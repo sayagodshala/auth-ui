@@ -109,12 +109,20 @@ public class LoginActivity extends AppCompatActivity implements AuthUIFragment.A
 
     @Override
     public void onFacebookClicked(boolean isRegistration) {
-        ...call your api
+        if(isRegistration){
+            ...signup facebook user(API)
+        } else{
+            ...login facebook user(API)
+        }
     }
 
     @Override
     public void onGoogleClicked(boolean isRegistration) {
-        ...call your api
+        if(isRegistration){
+            ...signup google user(API)
+        } else{
+            ...login google user(API)
+        }
     }
 
 }
