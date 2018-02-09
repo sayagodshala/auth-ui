@@ -23,6 +23,8 @@ Android App Auth(Login, Signup and Forgot Password) UI
 - Setup material theme like Teal, Cyan, Indigo and many more.
 - Hide and Show social logins.
 
+![Basic Form](https://raw.githubusercontent.com/sayagodshala/auth-ui/master/screenshots/1.jpg "Basic Form")
+
 # Setup
 ## 1. Include in your project
 
@@ -126,7 +128,7 @@ To hide social platforms use below code
 authUISettings.setSocialPlatformRequired(false);
 ```
 
-To hide logo use below code
+To hide App logo
 
 ```java
 authUISettings.setAppLogoRequired(false);
@@ -144,6 +146,48 @@ In case your app only requires one of the below
 authUISettings.setFacebookLoginRequired(false);
 **OR**
 authUISettings.setGoogleLoginRequired(false);
+```
+
+In case your app doesn't require forgot password
+
+```java
+authUISettings.setForgotPasswordRequired(true);
+```
+
+Set your default view
+
+```java
+authUISettings.setDefaultView(AuthUIView.LOGIN);
+**OR**
+authUISettings.setDefaultView(AuthUIView.SIGNUP);
+```
+
+Supported Themes (Default Theme is WHITE)
+
+```java
+authUISettings.setMaterialTheme(MaterialTheme.DEFAULT);
+**OR**
+authUISettings.setMaterialTheme(MaterialTheme.WHITE);
+**OR**
+authUISettings.setMaterialTheme(MaterialTheme.RED);
+**OR**
+authUISettings.setMaterialTheme(MaterialTheme.PINK);
+**OR**
+authUISettings.setMaterialTheme(MaterialTheme.PURPLE);
+**OR**
+authUISettings.setMaterialTheme(MaterialTheme.DEEP_PURPLE);
+**OR**
+authUISettings.setMaterialTheme(MaterialTheme.INDIGO);
+**OR**
+authUISettings.setMaterialTheme(MaterialTheme.BLUE);
+**OR**
+authUISettings.setMaterialTheme(MaterialTheme.LIGHT_BLUE);
+**OR**
+authUISettings.setMaterialTheme(MaterialTheme.CYAN);
+**OR**
+authUISettings.setMaterialTheme(MaterialTheme.TEAL);
+**OR**
+authUISettings.setMaterialTheme(MaterialTheme.BLUE_GREY);
 ```
 
 ### Result
