@@ -2,6 +2,15 @@
 Android App Auth(Login, Signup and Forgot Password) UI
 
 
+[![Download](https://api.bintray.com/packages/sayagodshala/maven/auth-ui/images/download.svg) ](https://bintray.com/sayagodshala/maven/auth-ui/_latestVersion)
+[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg?style=flat-square)](https://www.apache.org/licenses/LICENSE-2.0.html)
+[![TravisCI](https://travis-ci.org/sayagodshala/auth-ui.svg?branch=master)](https://travis-ci.org/sayagodshala/auth-ui)
+
+<!--[![Download](https://api.bintray.com/packages/sayagodshala/maven/auth-ui/images/download.svg) ](https://bintray.com/sayagodshala/maven/auth-ui/_latestVersion)-->
+<!--[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg?style=flat-square)](https://www.apache.org/licenses/LICENSE-2.0.html)-->
+<!--[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ActionSheet%20for%20Android-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/5607)-->
+<!--[![TravisCI](https://travis-ci.org/aromajoin/actionsheet-android.svg?branch=master)](https://travis-ci.org/aromajoin/actionsheet-android)-->
+
 <!--[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android%20Smart%20Login-green.svg?style=true)](https://android-arsenal.com/details/1/3026)-->
 
 <!--![Image](https://raw.githubusercontent.com/CodelightStudios/Android-Smart-Login/master/Screenshots/Info_new.png)-->
