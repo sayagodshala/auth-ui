@@ -21,3 +21,6 @@ script:
 
 before_install:
   - yes | sdkmanager "platforms;android-27"
+
+checkout: post: - cp local.properties.ci local.properties
+
