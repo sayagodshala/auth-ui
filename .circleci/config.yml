@@ -28,16 +28,16 @@ jobs:
     steps:
       - checkout
 
-      - run:
-          name: Ensure Android SDK install is up-to-date
-          command: - sh .circleci/ci-scripts/ensure-sdkmanager.sh
-
       # Download and cache dependencies
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "build.gradle" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
+
+#      - run:
+#          name: Ensure Android SDK install is up-to-date
+#          command: - sh .circleci/ci-scripts/ensure-sdkmanager.sh
 
       - run: gradle dependencies
 
