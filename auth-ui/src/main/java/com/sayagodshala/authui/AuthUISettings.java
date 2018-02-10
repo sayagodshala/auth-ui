@@ -12,8 +12,7 @@ public class AuthUISettings implements Parcelable {
     private boolean facebookLoginRequired = true;
     private boolean googleLoginRequired = true;
     private boolean forgotPasswordRequired = true;
-    private boolean loginWithMobileAndPassword = false;
-    private boolean loginWithEmailOrMobile = false;
+    private LoginType loginType = LoginType.EMAIL;
     private AuthUIView defaultView = AuthUIView.LOGIN;
     private MaterialTheme materialTheme = MaterialTheme.BLUE_GREY;
     private int appLogo;
@@ -94,20 +93,12 @@ public class AuthUISettings implements Parcelable {
         this.forgotPasswordRequired = forgotPasswordRequired;
     }
 
-    public boolean isLoginWithMobileAndPassword() {
-        return loginWithMobileAndPassword;
+    public LoginType getLoginType() {
+        return loginType;
     }
 
-    public void setLoginWithMobileAndPassword(boolean loginWithMobileAndPassword) {
-        this.loginWithMobileAndPassword = loginWithMobileAndPassword;
-    }
-
-    public boolean isLoginWithEmailOrMobile() {
-        return loginWithEmailOrMobile;
-    }
-
-    public void setLoginWithEmailOrMobile(boolean loginWithEmailOrMobile) {
-        this.loginWithEmailOrMobile = loginWithEmailOrMobile;
+    public void setLoginType(LoginType loginType) {
+        this.loginType = loginType;
     }
 
     public AuthUIView getDefaultView() {
@@ -277,8 +268,7 @@ public class AuthUISettings implements Parcelable {
         dest.writeByte(this.facebookLoginRequired ? (byte) 1 : (byte) 0);
         dest.writeByte(this.googleLoginRequired ? (byte) 1 : (byte) 0);
         dest.writeByte(this.forgotPasswordRequired ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.loginWithMobileAndPassword ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.loginWithEmailOrMobile ? (byte) 1 : (byte) 0);
+        dest.writeString(this.loginType.name());
         dest.writeString(this.defaultView.name());
         dest.writeString(this.materialTheme.name());
         dest.writeInt(this.appLogo);
@@ -308,8 +298,7 @@ public class AuthUISettings implements Parcelable {
         this.facebookLoginRequired = in.readByte() != 0;
         this.googleLoginRequired = in.readByte() != 0;
         this.forgotPasswordRequired = in.readByte() != 0;
-        this.loginWithMobileAndPassword = in.readByte() != 0;
-        this.loginWithEmailOrMobile = in.readByte() != 0;
+        this.loginType = LoginType.valueOf(in.readString());
         this.defaultView = AuthUIView.valueOf(in.readString());
         this.materialTheme = MaterialTheme.valueOf(in.readString());
         this.appLogo = in.readInt();

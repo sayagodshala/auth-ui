@@ -99,37 +99,50 @@ Final step is to implement `AuthUIFragment.AuthUIFragmentListener` interface in 
 public class LoginActivity extends AppCompatActivity implements AuthUIFragment.AuthUIFragmentListener {
 
     @Override
-    public void onLoginClicked(String username, String password) {
-        ...call your api
-    }
-
-    @Override
-    public void onSignupClicked(String name, String email, String mobile, String password) {
-        ...call your api
-    }
-
-    @Override
-    public void onForgotPasswordClicked(String email) {
-        ...call your api
-    }
-
-    @Override
-    public void onFacebookClicked(boolean isRegistration) {
-        if(isRegistration){
-            ...signup facebook user(API)
-        } else{
-            ...login facebook user(API)
+        public void onLoginClicked(AuthUIUser user) {
+            ...call your api here in the below cases
+            switch (user.getLoginType()) {
+                case EMAIL:
+                    Log.d("onLoginClicked", "email : " + user.getEmail() + ", password : " + user.getPassword());
+                    break;
+                case MOBILE:
+                    Log.d("onLoginClicked", "mobile : " + user.getMobile() + ", password : " + user.getPassword());
+                    break;
+                case EMAIL_OR_MOBILE:
+                    Log.d("onLoginClicked", "email/mobile : " + user.getEmailOrMobile() + ", password : " + user.getPassword());
+                    break;
+            }
         }
-    }
 
-    @Override
-    public void onGoogleClicked(boolean isRegistration) {
-        if(isRegistration){
-            ...signup google user(API)
-        } else{
-            ...login google user(API)
+        @Override
+        public void onSignupClicked(AuthUIUser user) {
+            ...call your api here
+            Log.d("onSignupClicked", "name : " + user.getName() + ", email : " + user.getEmail() + ", mobile : " + user.getMobile() + ", password : " + user.getPassword());
         }
-    }
+
+        @Override
+        public void onForgotPasswordClicked(AuthUIUser user) {
+            ...call your api here
+            Log.d("onForgotPasswordClicked", "email : " + user.getEmail());
+        }
+
+        @Override
+        public void onFacebookClicked(boolean isRegistration) {
+            if(isRegistration){
+                ...signup facebook user(API)
+            } else{
+                ...login facebook user(API)
+            }
+        }
+
+        @Override
+        public void onGoogleClicked(boolean isRegistration) {
+            if(isRegistration){
+                ...signup google user(API)
+            } else{
+                ...login google user(API)
+            }
+        }
 
 }
 ```
@@ -138,6 +151,16 @@ This is the simplest way to configure the library to enable Custom login mode al
 **That's it!**
 
 # More about AuthUISettings
+
+Login Types(EMAIL,MOBILE and EMAIL_OR_MOBILE). Default login type is EMAIL.
+
+```java
+authUISettings.setLoginType(LoginType.EMAIL);
+**OR**
+authUISettings.setLoginType(LoginType.MOBILE);
+**OR**
+authUISettings.setLoginType(LoginType.EMAIL_OR_MOBILE);
+```
 
 To hide social platforms use below code
 

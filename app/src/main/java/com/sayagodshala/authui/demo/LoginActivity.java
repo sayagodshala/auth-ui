@@ -10,6 +10,7 @@ import com.sayagodshala.authui.AuthUIFragment;
 import com.sayagodshala.authui.AuthUISettings;
 import com.sayagodshala.authui.AuthUIUser;
 import com.sayagodshala.authui.AuthUIView;
+import com.sayagodshala.authui.LoginType;
 import com.sayagodshala.authui.MaterialTheme;
 
 
@@ -28,8 +29,7 @@ public class LoginActivity extends AppCompatActivity implements AuthUIFragment.A
         authUISettings.setFacebookLoginRequired(true);
         authUISettings.setGoogleLoginRequired(true);
         authUISettings.setForgotPasswordRequired(true);
-//        authUISettings.setLoginWithMobileAndPassword(true);
-//        authUISettings.setLoginWithEmailOrMobile(true);
+//        authUISettings.setLoginType(LoginType.MOBILE);
         authUISettings.setAppLogo(R.mipmap.my_logo);
         authUISettings.setLoginTitle(getString(R.string.login_title));
         authUISettings.setSignupTitle(getString(R.string.signup_title));
