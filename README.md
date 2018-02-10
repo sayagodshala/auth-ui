@@ -210,25 +210,9 @@ authUISettings.setMaterialTheme(MaterialTheme.DEFAULT);
 authUISettings.setMaterialTheme(MaterialTheme.WHITE);
 **OR**
 authUISettings.setMaterialTheme(MaterialTheme.RED);
-**OR**
-authUISettings.setMaterialTheme(MaterialTheme.PINK);
-**OR**
-authUISettings.setMaterialTheme(MaterialTheme.PURPLE);
-**OR**
-authUISettings.setMaterialTheme(MaterialTheme.DEEP_PURPLE);
-**OR**
-authUISettings.setMaterialTheme(MaterialTheme.INDIGO);
-**OR**
-authUISettings.setMaterialTheme(MaterialTheme.BLUE);
-**OR**
-authUISettings.setMaterialTheme(MaterialTheme.LIGHT_BLUE);
-**OR**
-authUISettings.setMaterialTheme(MaterialTheme.CYAN);
-**OR**
-authUISettings.setMaterialTheme(MaterialTheme.TEAL);
-**OR**
-authUISettings.setMaterialTheme(MaterialTheme.BLUE_GREY);
 ```
+
+and many more like PINK,PURPLE,DEEP_PURPLE,INDIGO,BLUE,LIGHT_BLUE,CYAN,TEAL,BLUE_GREY,YELLOW,AMBER,BROWN,GREEN and GREY.
 
 # Included Libraries
 The following third-party libraries were used in this framework.
