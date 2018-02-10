@@ -53,6 +53,10 @@
     <color name="mat_blue_grey">#607D8B</color>
     <color name="mat_blue_grey_light_dark">#37474F</color>
     <color name="mat_blue_grey_dark">#263238</color>
+
+    <color name="mat_yellow">#FFEB3B</color>
+    <color name="mat_yellow_light_dark">#F9A825</color>
+    <color name="mat_yellow_dark">#F57F17</color>
     <!---->
 
 </resources>

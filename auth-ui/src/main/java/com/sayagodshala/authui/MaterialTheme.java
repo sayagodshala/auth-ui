@@ -13,6 +13,7 @@ public enum MaterialTheme {
     TEAL(MaterialColor.TEAL),
     BLUE_GREY(MaterialColor.BLUE_GREY),
     WHITE(MaterialColor.WHITE),
+    YELLOW(MaterialColor.WHITE),
     DEFAULT(MaterialColor.WHITE);
 
     MaterialColor color;

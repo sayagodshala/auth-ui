@@ -5,6 +5,15 @@ Android App Auth(Login, Signup and Forgot Password) UI
 [![Download](https://api.bintray.com/packages/sayagodshala/maven/auth-ui/images/download.svg) ](https://bintray.com/sayagodshala/maven/auth-ui/_latestVersion)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg?style=flat-square)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![TravisCI](https://travis-ci.org/sayagodshala/auth-ui.svg?branch=master)](https://travis-ci.org/sayagodshala/auth-ui)
+[![API](https://img.shields.io/badge/API-15%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=15)
+
+# What's in the box
+
+- The login, signup and forgot password UI framework for your app
+- Easy way to implement
+- Play with element visibility
+- Setup material theme like Teal, Cyan, Indigo and many more.
+- Hide and Show social logins.
 
 <!--[![Download](https://api.bintray.com/packages/sayagodshala/maven/auth-ui/images/download.svg) ](https://bintray.com/sayagodshala/maven/auth-ui/_latestVersion)-->
 <!--[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg?style=flat-square)](https://www.apache.org/licenses/LICENSE-2.0.html)-->
@@ -19,14 +28,11 @@ Basic Form | Signup without Social Platforms | Login without Social Platforms
 ---- | ---- | ----
 <img width="300" height="533" src="screenshots/1.jpg"> | <img width="300" height="533" src="screenshots/3.jpg"> | <img width="300" height="533" src="screenshots/4.jpg">
 
+### Themes
 
-# What's in the box
-
-- The login, signup and forgot password UI framework for your app
-- Easy way to implement
-- Play with element visibility
-- Setup material theme like Teal, Cyan, Indigo and many more.
-- Hide and Show social logins.
+CYAN | TEAL | WHITE/DEFAULT
+---- | ---- | ----
+<img width="300" height="533" src="screenshots/cyan.jpg"> | <img width="300" height="533" src="screenshots/teal.jpg"> | <img width="300" height="533" src="screenshots/default.jpg">
 
 # Setup
 ## 1. Include in your project
@@ -200,12 +206,6 @@ authUISettings.setMaterialTheme(MaterialTheme.TEAL);
 **OR**
 authUISettings.setMaterialTheme(MaterialTheme.BLUE_GREY);
 ```
-
-### Result
-
-CYAN | TEAL | WHITE/DEFAULT
----- | ---- | ----
-<img width="300" height="533" src="screenshots/cyan.jpg"> | <img width="300" height="533" src="screenshots/teal.jpg"> | <img width="300" height="533" src="screenshots/default.jpg">
 
 # Included Libraries
 The following third-party libraries were used in this framework.
