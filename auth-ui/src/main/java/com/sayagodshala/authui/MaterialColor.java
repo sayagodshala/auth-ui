@@ -11,7 +11,11 @@ public enum MaterialColor {
     CYAN(R.color.white,R.color.dark_grey,R.color.mat_cyan,R.color.mat_cyan_light_dark,R.color.mat_cyan_dark),
     TEAL(R.color.white,R.color.dark_grey,R.color.mat_teal,R.color.mat_teal_light_dark,R.color.mat_teal_dark),
     BLUE_GREY(R.color.white,R.color.dark_grey,R.color.mat_blue_grey,R.color.mat_blue_grey_light_dark,R.color.mat_blue_grey_dark),
-    YELLOW(R.color.black,R.color.dark_grey,R.color.white,R.color.grey,R.color.dark_grey),
+    YELLOW(R.color.black,R.color.dark_grey,R.color.mat_yellow,R.color.mat_yellow_light_dark,R.color.mat_yellow_dark),
+    AMBER(R.color.black,R.color.dark_grey,R.color.mat_amber,R.color.mat_amber_light_dark,R.color.mat_amber_dark),
+    BROWN(R.color.white,R.color.dark_grey,R.color.mat_brown,R.color.mat_brown_light_dark,R.color.mat_brown_dark),
+    GREEN(R.color.white,R.color.dark_grey,R.color.mat_green,R.color.mat_green_light_dark,R.color.mat_green_dark),
+    GREY(R.color.white,R.color.dark_grey,R.color.mat_grey,R.color.mat_grey_light_dark,R.color.mat_grey_dark),
     WHITE(R.color.black,R.color.dark_grey,R.color.white,R.color.grey,R.color.dark_grey);
 
     private final int textPrimaryColor;

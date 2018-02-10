@@ -137,22 +137,55 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
             if (layoutName.getVisibility() == View.VISIBLE) {
                 if (isSignUpValid()) {
                     if (mListener != null) {
-                        mListener.onSignupClicked(name.getText().toString(), email.getText().toString(), mobile.getText().toString(), password.getText().toString());
+                        AuthUIUser authUIUser = new AuthUIUser();
+                        authUIUser.setName(name.getText().toString());
+                        authUIUser.setEmail(email.getText().toString());
+                        authUIUser.setMobile(mobile.getText().toString());
+                        authUIUser.setPassword(password.getText().toString());
+                        mListener.onSignupClicked(authUIUser);
                     }
                 }
             } else {
                 if (proceed.getText().toString().equalsIgnoreCase("login")) {
-                    if (isSignInValid()) {
-                        if (mListener != null) {
-                            mListener.onLoginClicked(email.getText().toString(), password.getText().toString());
+                    if(authUISettings.isLoginWithMobileAndPassword()) {
+                        if (isSignInWithMobileAndPasswordValid()) {
+                            if (mListener != null) {
+                                AuthUIUser authUIUser = new AuthUIUser();
+                                authUIUser.setMobile(mobile.getText().toString());
+                                authUIUser.setPassword(password.getText().toString());
+                                authUIUser.setLoginType(LoginType.MOBILE);
+                                mListener.onLoginClicked(authUIUser);
+                            }
+                        }
+                    } else if(authUISettings.isLoginWithEmailOrMobile()){
+                        if (isSignInWithEmailOrMobileValid()) {
+                            if (mListener != null) {
+                                AuthUIUser authUIUser = new AuthUIUser();
+                                authUIUser.setEmailOrMobile(email.getText().toString());
+                                authUIUser.setPassword(password.getText().toString());
+                                authUIUser.setLoginType(LoginType.EMAIL_OR_MOBILE);
+                                mListener.onLoginClicked(authUIUser);
+                            }
                         }
                     }
+                    else {
+                        if (isSignInValid()) {
+                            if (mListener != null) {
+                                AuthUIUser authUIUser = new AuthUIUser();
+                                authUIUser.setEmail(email.getText().toString());
+                                authUIUser.setPassword(password.getText().toString());
+                                authUIUser.setLoginType(LoginType.EMAIL);
+                                mListener.onLoginClicked(authUIUser);
+                            }
+                        }
+                    }
+
                 } else {
                     if (isForgotPasswordValid()) {
                         if (mListener != null) {
                             email.setText("");
                             bindData();
-                            mListener.onForgotPasswordClicked(email.getText().toString());
+                            mListener.onForgotPasswordClicked(new AuthUIUser(email.getText().toString()));
                         }
                     }
                 }
@@ -180,11 +213,11 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
     }
 
     public interface AuthUIFragmentListener {
-        void onLoginClicked(String username, String password);
+        void onLoginClicked(AuthUIUser user);
 
-        void onSignupClicked(String name, String email, String mobile, String password);
+        void onSignupClicked(AuthUIUser user);
 
-        void onForgotPasswordClicked(String email);
+        void onForgotPasswordClicked(AuthUIUser user);
 
         void onFacebookClicked(boolean isRegistration);
 
@@ -295,6 +328,19 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
             belowCont.setVisibility(View.VISIBLE);
             title.setText(authUISettings.getLoginTitle());
             terms.setText(authUISettings.getLoginTerms());
+
+            if(!textIsEmpty(authUISettings.getEmailHint()))
+                layoutEmail.setHint(authUISettings.getEmailHint());
+            if(!textIsEmpty(authUISettings.getPasswordHint()))
+                layoutPassword.setHint(authUISettings.getPasswordHint());
+
+            if(authUISettings.isLoginWithMobileAndPassword()) {
+                layoutEmail.setVisibility(View.GONE);
+                layoutMobile.setVisibility(View.VISIBLE);
+            } else if(authUISettings.isLoginWithEmailOrMobile()) {
+                layoutEmail.setHint("Email/Mobile");
+            }
+
             if (authUISettings.isSocialPlatformRequired()) {
                 facebookTv.setText(authUISettings.getFacebookLoginTitle());
                 googleTv.setText(authUISettings.getGoogleLoginTitle());
@@ -315,6 +361,16 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
             title.setText(authUISettings.getSignupTitle());
             terms.setText(authUISettings.getSignupTerms());
             belowCont.setVisibility(View.VISIBLE);
+
+            if(!textIsEmpty(authUISettings.getEmailHint()))
+                layoutEmail.setHint(authUISettings.getEmailHint());
+            if(!textIsEmpty(authUISettings.getMobileHint()))
+                layoutMobile.setHint(authUISettings.getMobileHint());
+            if(!textIsEmpty(authUISettings.getPasswordHint()))
+                layoutPassword.setHint(authUISettings.getPasswordHint());
+            if(!textIsEmpty(authUISettings.getNameHint()))
+                layoutName.setHint(authUISettings.getNameHint());
+
             if (authUISettings.isSocialPlatformRequired()) {
                 facebookTv.setText(authUISettings.getFacebookSignupTitle());
                 googleTv.setText(authUISettings.getGoogleSignupTitle());
@@ -340,14 +396,52 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-
     private boolean isSignInValid() {
         String validationMessage = "";
         String emailStr = email.getText().toString().trim();
+        String passwordStr = password.getText().toString().trim();
         if (!isValidEmail(emailStr)) {
             email.requestFocus();
             validationMessage = "Please enter valid email";
-        } else if (textIsEmpty(password.getText().toString())) {
+        } else if (textIsEmpty(passwordStr)) {
+            password.requestFocus();
+            validationMessage = "Invalid Password";
+        }
+
+        if (validationMessage.length() != 0)
+            showSnackBar(validationMessage);
+
+        return validationMessage.length() == 0;
+    }
+
+    private boolean isSignInWithEmailOrMobileValid() {
+        String validationMessage = "";
+        String emailStr = email.getText().toString().trim();
+        String passwordStr = password.getText().toString().trim();
+        if (textIsEmpty(emailStr)) {
+            email.requestFocus();
+            validationMessage = "Please enter email/mobile";
+        } else if (textIsEmpty(passwordStr)) {
+            password.requestFocus();
+            validationMessage = "Invalid Password";
+        }
+
+        if (validationMessage.length() != 0)
+            showSnackBar(validationMessage);
+
+        return validationMessage.length() == 0;
+    }
+
+    private boolean isSignInWithMobileAndPasswordValid() {
+        String validationMessage = "";
+        String mobileStr = mobile.getText().toString().trim();
+        String passwordStr = password.getText().toString().trim();
+        if (textIsEmpty(mobileStr)) {
+            mobile.requestFocus();
+            validationMessage = "Please enter valid mobile";
+        } else if(mobileStr.length() < 10){
+            validationMessage = "mobile number should be 10 digits long";
+        } else if (textIsEmpty(passwordStr)) {
             password.requestFocus();
             validationMessage = "Invalid Password";
         }
@@ -370,7 +464,7 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
         } else if (!isValidEmail(emailStr)) {
             email.requestFocus();
             validationMessage = "Please enter valid email";
-        } else if (textIsEmpty(mobileStr)) {
+        } else if (textIsEmpty(mobileStr) && mobileStr.length() < 10) {
             mobile.requestFocus();
             validationMessage = "Please enter mobile";
         } else if (textIsEmpty(passwordStr)) {

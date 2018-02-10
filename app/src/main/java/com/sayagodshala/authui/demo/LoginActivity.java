@@ -4,9 +4,11 @@ import android.content.Context;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.sayagodshala.authui.AuthUIFragment;
 import com.sayagodshala.authui.AuthUISettings;
+import com.sayagodshala.authui.AuthUIUser;
 import com.sayagodshala.authui.AuthUIView;
 import com.sayagodshala.authui.MaterialTheme;
 
@@ -26,6 +28,8 @@ public class LoginActivity extends AppCompatActivity implements AuthUIFragment.A
         authUISettings.setFacebookLoginRequired(true);
         authUISettings.setGoogleLoginRequired(true);
         authUISettings.setForgotPasswordRequired(true);
+//        authUISettings.setLoginWithMobileAndPassword(true);
+//        authUISettings.setLoginWithEmailOrMobile(true);
         authUISettings.setAppLogo(R.mipmap.my_logo);
         authUISettings.setLoginTitle(getString(R.string.login_title));
         authUISettings.setSignupTitle(getString(R.string.signup_title));
@@ -39,33 +43,43 @@ public class LoginActivity extends AppCompatActivity implements AuthUIFragment.A
         authUISettings.setLoginToggleTitle(getString(R.string.have_an_account));
         authUISettings.setSignupToggleTitle(getString(R.string.dont_have_account));
         authUISettings.setDefaultView(AuthUIView.LOGIN);
-        authUISettings.setMaterialTheme(MaterialTheme.BLUE);
+        authUISettings.setMaterialTheme(MaterialTheme.GREY);
 
         AuthUIFragment.loadFragment(this, AuthUIFragment.newInstance(authUISettings), R.id.frame);
     }
 
     @Override
-    public void onLoginClicked(String username, String password) {
-
+    public void onLoginClicked(AuthUIUser user) {
+        switch (user.getLoginType()) {
+            case EMAIL:
+                Log.d("onLoginClicked", "email : " + user.getEmail() + ", password : " + user.getPassword());
+                break;
+            case MOBILE:
+                Log.d("onLoginClicked", "mobile : " + user.getMobile() + ", password : " + user.getPassword());
+                break;
+            case EMAIL_OR_MOBILE:
+                Log.d("onLoginClicked", "email/mobile : " + user.getEmailOrMobile() + ", password : " + user.getPassword());
+                break;
+        }
     }
 
     @Override
-    public void onSignupClicked(String name, String email, String mobile, String password) {
-
+    public void onSignupClicked(AuthUIUser user) {
+        Log.d("onSignupClicked", "name : " + user.getName() + ", email : " + user.getEmail() + ", mobile : " + user.getMobile() + ", password : " + user.getPassword());
     }
 
     @Override
-    public void onForgotPasswordClicked(String email) {
-
+    public void onForgotPasswordClicked(AuthUIUser user) {
+        Log.d("onForgotPasswordClicked", "email : " + user.getEmail());
     }
 
     @Override
     public void onFacebookClicked(boolean isRegistration) {
-
+        Log.d("onFacebookClicked", "isRegistration : " + isRegistration);
     }
 
     @Override
     public void onGoogleClicked(boolean isRegistration) {
-
+        Log.d("onGoogleClicked", "isRegistration : " + isRegistration);
     }
 }
