@@ -7,14 +7,18 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.sayagodshala.authui.AuthUIFragment;
+import com.sayagodshala.authui.AuthUIFragmentListener;
 import com.sayagodshala.authui.AuthUISettings;
 import com.sayagodshala.authui.AuthUIUser;
 import com.sayagodshala.authui.AuthUIView;
 import com.sayagodshala.authui.LoginType;
 import com.sayagodshala.authui.MaterialTheme;
+import com.sayagodshala.authui.SocialAccount;
 
 
-public class LoginActivity extends AppCompatActivity implements AuthUIFragment.AuthUIFragmentListener {
+public class LoginActivity extends AppCompatActivity implements AuthUIFragmentListener {
+
+    private AuthUIFragment authUIFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +47,11 @@ public class LoginActivity extends AppCompatActivity implements AuthUIFragment.A
         authUISettings.setLoginToggleTitle(getString(R.string.have_an_account));
         authUISettings.setSignupToggleTitle(getString(R.string.dont_have_account));
         authUISettings.setDefaultView(AuthUIView.LOGIN);
-        authUISettings.setMaterialTheme(MaterialTheme.GREY);
+        authUISettings.setMaterialTheme(MaterialTheme.GREEN);
 
-        AuthUIFragment.loadFragment(this, AuthUIFragment.newInstance(authUISettings), R.id.frame);
+        authUIFragment = AuthUIFragment.newInstanceWithDefaultSettings();
+
+        AuthUIFragment.loadFragment(this, authUIFragment, R.id.frame);
     }
 
     @Override
@@ -71,15 +77,22 @@ public class LoginActivity extends AppCompatActivity implements AuthUIFragment.A
     @Override
     public void onForgotPasswordClicked(AuthUIUser user) {
         Log.d("onForgotPasswordClicked", "email : " + user.getEmail());
+        authUIFragment.recallLoginView();
     }
 
     @Override
-    public void onFacebookClicked(boolean isRegistration) {
-        Log.d("onFacebookClicked", "isRegistration : " + isRegistration);
+    public void onSocialAccountClicked(SocialAccount socialAccount, boolean isRegistration) {
+        Log.d("onSocialAccountClicked", "socialAccount : " + socialAccount.name() + ", isRegistration : " + isRegistration);
+        switch (socialAccount) {
+            case FACEBOOK:
+                break;
+            case GOOGLE:
+                break;
+        }
     }
 
     @Override
-    public void onGoogleClicked(boolean isRegistration) {
-        Log.d("onGoogleClicked", "isRegistration : " + isRegistration);
+    public void onFormValidationError(String error) {
+        Log.d("onFormValidationError", "error : " + error);
     }
 }

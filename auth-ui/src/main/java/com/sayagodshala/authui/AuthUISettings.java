@@ -12,26 +12,28 @@ public class AuthUISettings implements Parcelable {
     private boolean facebookLoginRequired = true;
     private boolean googleLoginRequired = true;
     private boolean forgotPasswordRequired = true;
+    private boolean handleFormError = false;
     private LoginType loginType = LoginType.EMAIL;
     private AuthUIView defaultView = AuthUIView.LOGIN;
     private MaterialTheme materialTheme = MaterialTheme.BLUE_GREY;
-    private int appLogo;
+    private int appLogo = R.mipmap.ic_launcher;
     private int bg;
-    private String loginTitle;
-    private String signupTitle;
-    private String forgotPasswordTitle;
-    private String nameHint;
-    private String emailHint;
-    private String mobileHint;
-    private String passwordHint;
-    private String loginTerms;
-    private String signupTerms;
-    private String facebookLoginTitle;
-    private String facebookSignupTitle;
-    private String googleLoginTitle;
-    private String googleSignupTitle;
-    private String loginToggleTitle;
-    private String signupToggleTitle;
+    private String loginTitle = "Login using your registered details.";
+    private String signupTitle = "Want to join? Signup in a seconds";
+    private String forgotPasswordTitle = "Put in your email id for password reset link";
+    private String nameHint = "Name";
+    private String emailHint = "Email";
+    private String mobileHint = "Mobile";
+    private String passwordHint = "Password";
+    private String loginTerms = "By Logging in I agree to the Terms of Use";
+    private String signupTerms = "By Signing up I agree to the Terms of Use";
+    private String facebookLoginTitle = "Login with Facebook";
+    private String facebookSignupTitle = "Signup with Facebook";
+    private String googleLoginTitle = "Login with Google";
+    private String googleSignupTitle = "Signup with Google";
+    private String loginToggleTitle = "Have an account? <b>LOGIN</b>";
+    private String signupToggleTitle = "Don't have an account? <b>SIGN UP</b>";
+
 
 
     public AuthUISettings() {
@@ -91,6 +93,14 @@ public class AuthUISettings implements Parcelable {
 
     public void setForgotPasswordRequired(boolean forgotPasswordRequired) {
         this.forgotPasswordRequired = forgotPasswordRequired;
+    }
+
+    public boolean isHandleFormError() {
+        return handleFormError;
+    }
+
+    public void setHandleFormError(boolean handleFormError) {
+        this.handleFormError = handleFormError;
     }
 
     public LoginType getLoginType() {
@@ -268,6 +278,7 @@ public class AuthUISettings implements Parcelable {
         dest.writeByte(this.facebookLoginRequired ? (byte) 1 : (byte) 0);
         dest.writeByte(this.googleLoginRequired ? (byte) 1 : (byte) 0);
         dest.writeByte(this.forgotPasswordRequired ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.handleFormError ? (byte) 1 : (byte) 0);
         dest.writeString(this.loginType.name());
         dest.writeString(this.defaultView.name());
         dest.writeString(this.materialTheme.name());
@@ -298,6 +309,7 @@ public class AuthUISettings implements Parcelable {
         this.facebookLoginRequired = in.readByte() != 0;
         this.googleLoginRequired = in.readByte() != 0;
         this.forgotPasswordRequired = in.readByte() != 0;
+        this.handleFormError = in.readByte() != 0;
         this.loginType = LoginType.valueOf(in.readString());
         this.defaultView = AuthUIView.valueOf(in.readString());
         this.materialTheme = MaterialTheme.valueOf(in.readString());

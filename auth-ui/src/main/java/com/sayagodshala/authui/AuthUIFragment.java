@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,6 +58,7 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
     LinearLayout orCont;
     LinearLayout socials;
     LinearLayout belowCont;
+    LinearLayout fpLink;
     RelativeLayout fb;
     RelativeLayout google;
     TextView terms;
@@ -64,6 +66,8 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
     TextView facebookTv;
     TextView googleTv;
     TextView or;
+    TextView fpLogin;
+    TextView fpSignup;
     View socialDivider;
     private View view;
 
@@ -79,6 +83,11 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
         AuthUIFragment fragment = new AuthUIFragment();
         if (bundle != null)
             fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    public static AuthUIFragment newInstanceWithDefaultSettings() {
+        AuthUIFragment fragment = new AuthUIFragment();
         return fragment;
     }
 
@@ -100,18 +109,14 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
         if (bundle != null && bundle.containsKey(AUTHUI_SETTINGS)) {
             authUISettings = (AuthUISettings) bundle.getParcelable(AUTHUI_SETTINGS);
             Log.d("AuthUISettings", new Gson().toJson(authUISettings));
-            bindView(view);
-            setClickListener();
-            bindData();
         } else {
-            getActivity().getFragmentManager().popBackStack();
+            authUISettings = new AuthUISettings();
+            Log.d("Default AuthUISettings", new Gson().toJson(authUISettings));
         }
+        bindView(view);
+        setClickListener();
+        bindData();
         return view;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-
     }
 
     @Override
@@ -151,28 +156,31 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
                     authUIUser.setLoginType(authUISettings.getLoginType());
                     switch (authUISettings.getLoginType()) {
                         case EMAIL:
-                            authUIUser.setEmail(email.getText().toString());
-                            authUIUser.setPassword(password.getText().toString());
-                            mListener.onLoginClicked(authUIUser);
+                            if (isSignInValid()) {
+                                authUIUser.setEmail(email.getText().toString());
+                                authUIUser.setPassword(password.getText().toString());
+                                mListener.onLoginClicked(authUIUser);
+                            }
                             break;
                         case MOBILE:
-                            authUIUser.setMobile(mobile.getText().toString());
-                            authUIUser.setPassword(password.getText().toString());
-                            mListener.onLoginClicked(authUIUser);
-
+                            if (isSignInWithMobileAndPasswordValid()) {
+                                authUIUser.setMobile(mobile.getText().toString());
+                                authUIUser.setPassword(password.getText().toString());
+                                mListener.onLoginClicked(authUIUser);
+                            }
                             break;
                         case EMAIL_OR_MOBILE:
-                            authUIUser.setEmailOrMobile(email.getText().toString());
-                            authUIUser.setPassword(password.getText().toString());
-                            mListener.onLoginClicked(authUIUser);
+                            if (isSignInWithEmailOrMobileValid()) {
+                                authUIUser.setEmailOrMobile(email.getText().toString());
+                                authUIUser.setPassword(password.getText().toString());
+                                mListener.onLoginClicked(authUIUser);
+                            }
                             break;
                     }
 
                 } else {
                     if (isForgotPasswordValid()) {
                         if (mListener != null) {
-                            email.setText("");
-                            bindData();
                             mListener.onForgotPasswordClicked(new AuthUIUser(email.getText().toString()));
                         }
                     }
@@ -182,11 +190,10 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
 
         } else if (view.getId() == R.id.fb) {
             if (mListener != null)
-                mListener.onFacebookClicked(layoutName.getVisibility() == View.VISIBLE);
-
+                mListener.onSocialAccountClicked(SocialAccount.FACEBOOK, layoutName.getVisibility() == View.VISIBLE);
         } else if (view.getId() == R.id.google) {
             if (mListener != null)
-                mListener.onGoogleClicked(layoutName.getVisibility() == View.VISIBLE);
+                mListener.onSocialAccountClicked(SocialAccount.GOOGLE, layoutName.getVisibility() == View.VISIBLE);
         } else if (view.getId() == R.id.signin_signup) {
             if (!authUISettings.isSignupRequired())
                 return;
@@ -197,19 +204,12 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
             }
         } else if (view.getId() == R.id.forgot_password) {
             setForgotPasswordView();
+        } else if (view.getId() == R.id.fp_login) {
+            setLoginView();
+        } else if (view.getId() == R.id.fp_signup) {
+            setSignupView();
         }
-    }
 
-    public interface AuthUIFragmentListener {
-        void onLoginClicked(AuthUIUser user);
-
-        void onSignupClicked(AuthUIUser user);
-
-        void onForgotPasswordClicked(AuthUIUser user);
-
-        void onFacebookClicked(boolean isRegistration);
-
-        void onGoogleClicked(boolean isRegistration);
     }
 
     private void bindView(View view) {
@@ -237,6 +237,9 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
         or = view.findViewById(R.id.or);
         socialDivider = view.findViewById(R.id.social_divider);
         belowCont = view.findViewById(R.id.below_cont);
+        fpLink = view.findViewById(R.id.fp_link);
+        fpLogin = view.findViewById(R.id.fp_login);
+        fpSignup = view.findViewById(R.id.fp_signup);
     }
 
     private void setClickListener() {
@@ -245,148 +248,154 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
         google.setOnClickListener(this);
         fb.setOnClickListener(this);
         forgotPassword.setOnClickListener(this);
+        fpLogin.setOnClickListener(this);
+        fpSignup.setOnClickListener(this);
     }
 
-    private void bindData() {
-        if (bundle != null) {
+    public void recallLoginView() {
+        bindData();
+    }
 
-            if (authUISettings != null) {
-
-                if (!authUISettings.isFacebookLoginRequired() && !authUISettings.isGoogleLoginRequired()) {
-                    authUISettings.setSocialPlatformRequired(false);
-                }
-
-                if (!authUISettings.isSocialPlatformRequired()) {
-                    socials.setVisibility(View.GONE);
-                    orCont.setVisibility(View.GONE);
-                }
-
-                if (!authUISettings.isFacebookLoginRequired()) {
-                    socialDivider.setVisibility(View.GONE);
-                    fb.setVisibility(View.GONE);
-                }
-
-                if (!authUISettings.isGoogleLoginRequired()) {
-                    socialDivider.setVisibility(View.GONE);
-                    google.setVisibility(View.GONE);
-                }
-
-                if (!authUISettings.isAppLogoRequired()) {
-                    appLogo.setVisibility(View.VISIBLE);
-                } else {
-                    if (authUISettings.getAppLogo() != 0) {
-                        appLogo.setImageResource(authUISettings.getAppLogo());
-                    }
-                }
-
-                if (authUISettings.isSignupRequired())
-                    signinSignup.setVisibility(View.VISIBLE);
-                else
-                    signinSignup.setVisibility(View.GONE);
-
-                switch (authUISettings.getDefaultView()) {
-                    case LOGIN:
-                        setLoginView();
-                        break;
-                    case SIGNUP:
-                        setSignupView();
-                        break;
-                    default:
-                        setForgotPasswordView();
-                        break;
-                }
-
-                applyTheme();
-
+    public void bindData() {
+        email.setText("");
+        if (authUISettings != null) {
+            if (!authUISettings.isFacebookLoginRequired() && !authUISettings.isGoogleLoginRequired()) {
+                authUISettings.setSocialPlatformRequired(false);
             }
+
+            if (!authUISettings.isSocialPlatformRequired()) {
+                socials.setVisibility(View.GONE);
+                orCont.setVisibility(View.GONE);
+            }
+
+            if (!authUISettings.isFacebookLoginRequired()) {
+                socialDivider.setVisibility(View.GONE);
+                fb.setVisibility(View.GONE);
+            }
+
+            if (!authUISettings.isGoogleLoginRequired()) {
+                socialDivider.setVisibility(View.GONE);
+                google.setVisibility(View.GONE);
+            }
+
+            if (!authUISettings.isAppLogoRequired()) {
+                appLogo.setVisibility(View.VISIBLE);
+            } else {
+                if (authUISettings.getAppLogo() != 0) {
+                    appLogo.setImageResource(authUISettings.getAppLogo());
+                }
+            }
+
+            switch (authUISettings.getDefaultView()) {
+                case LOGIN:
+                    setLoginView();
+                    break;
+                case SIGNUP:
+                    setSignupView();
+                    break;
+                default:
+                    setForgotPasswordView();
+                    break;
+            }
+            applyTheme();
         }
     }
 
     private void setLoginView() {
-        if (authUISettings != null) {
-            layoutName.setVisibility(View.GONE);
-            layoutMobile.setVisibility(View.GONE);
-            layoutPassword.setVisibility(View.VISIBLE);
-            layoutEmail.setVisibility(View.VISIBLE);
-            if (!authUISettings.isForgotPasswordRequired()) {
-                forgotPassword.setVisibility(View.GONE);
-            } else {
-                forgotPassword.setVisibility(View.VISIBLE);
-            }
-            belowCont.setVisibility(View.VISIBLE);
-            title.setText(authUISettings.getLoginTitle());
-            terms.setText(authUISettings.getLoginTerms());
-
-            if (!textIsEmpty(authUISettings.getEmailHint()))
-                layoutEmail.setHint(authUISettings.getEmailHint());
-            if (!textIsEmpty(authUISettings.getPasswordHint()))
-                layoutPassword.setHint(authUISettings.getPasswordHint());
-
-            switch (authUISettings.getLoginType()) {
-                case EMAIL:
-                    break;
-                case MOBILE:
-                    layoutEmail.setVisibility(View.GONE);
-                    layoutMobile.setVisibility(View.VISIBLE);
-                    break;
-                case EMAIL_OR_MOBILE:
-                    layoutEmail.setHint("Email/Mobile");
-                    break;
-            }
-
-            if (authUISettings.isSocialPlatformRequired()) {
-                facebookTv.setText(authUISettings.getFacebookLoginTitle());
-                googleTv.setText(authUISettings.getGoogleLoginTitle());
-            }
-
-            if (authUISettings.isSignupRequired()) {
-                signinSignup.setText(authUISettings.getSignupToggleTitle());
-            }
-            proceed.setText(getString(R.string.loggin));
+        layoutName.setVisibility(View.GONE);
+        layoutMobile.setVisibility(View.GONE);
+        fpLink.setVisibility(View.GONE);
+        layoutPassword.setVisibility(View.VISIBLE);
+        layoutEmail.setVisibility(View.VISIBLE);
+        if (!authUISettings.isForgotPasswordRequired()) {
+            forgotPassword.setVisibility(View.GONE);
+        } else {
+            forgotPassword.setVisibility(View.VISIBLE);
         }
+        belowCont.setVisibility(View.VISIBLE);
+        title.setText(Html.fromHtml(authUISettings.getLoginTitle()));
+        terms.setText(Html.fromHtml(authUISettings.getLoginTerms()));
+
+        if (!textIsEmpty(authUISettings.getEmailHint()))
+            layoutEmail.setHint(authUISettings.getEmailHint());
+        if (!textIsEmpty(authUISettings.getPasswordHint()))
+            layoutPassword.setHint(authUISettings.getPasswordHint());
+
+        switch (authUISettings.getLoginType()) {
+            case EMAIL:
+                break;
+            case MOBILE:
+                layoutEmail.setVisibility(View.GONE);
+                layoutMobile.setVisibility(View.VISIBLE);
+                break;
+            case EMAIL_OR_MOBILE:
+                layoutEmail.setHint("Email/Mobile");
+                break;
+        }
+
+        if (authUISettings.isSocialPlatformRequired()) {
+            facebookTv.setText(Html.fromHtml(authUISettings.getFacebookLoginTitle()));
+            googleTv.setText(Html.fromHtml(authUISettings.getGoogleLoginTitle()));
+        }
+
+        if (authUISettings.isSignupRequired()) {
+            signinSignup.setVisibility(View.VISIBLE);
+            signinSignup.setText(Html.fromHtml(authUISettings.getSignupToggleTitle()));
+        } else {
+            signinSignup.setVisibility(View.GONE);
+        }
+
+        proceed.setText(getString(R.string.loggin));
     }
 
     private void setSignupView() {
-        if (authUISettings != null) {
-            layoutName.setVisibility(View.VISIBLE);
-            layoutMobile.setVisibility(View.VISIBLE);
-            forgotPassword.setVisibility(View.GONE);
-            title.setText(authUISettings.getSignupTitle());
-            terms.setText(authUISettings.getSignupTerms());
-            belowCont.setVisibility(View.VISIBLE);
+        layoutName.setVisibility(View.VISIBLE);
+        layoutMobile.setVisibility(View.VISIBLE);
+        layoutEmail.setVisibility(View.VISIBLE);
+        layoutPassword.setVisibility(View.VISIBLE);
+        fpLink.setVisibility(View.GONE);
+        forgotPassword.setVisibility(View.GONE);
+        title.setText(authUISettings.getSignupTitle());
+        terms.setText(authUISettings.getSignupTerms());
+        belowCont.setVisibility(View.VISIBLE);
 
-            if (!textIsEmpty(authUISettings.getEmailHint()))
-                layoutEmail.setHint(authUISettings.getEmailHint());
-            if (!textIsEmpty(authUISettings.getMobileHint()))
-                layoutMobile.setHint(authUISettings.getMobileHint());
-            if (!textIsEmpty(authUISettings.getPasswordHint()))
-                layoutPassword.setHint(authUISettings.getPasswordHint());
-            if (!textIsEmpty(authUISettings.getNameHint()))
-                layoutName.setHint(authUISettings.getNameHint());
+        if (!textIsEmpty(authUISettings.getEmailHint()))
+            layoutEmail.setHint(authUISettings.getEmailHint());
+        if (!textIsEmpty(authUISettings.getMobileHint()))
+            layoutMobile.setHint(authUISettings.getMobileHint());
+        if (!textIsEmpty(authUISettings.getPasswordHint()))
+            layoutPassword.setHint(authUISettings.getPasswordHint());
+        if (!textIsEmpty(authUISettings.getNameHint()))
+            layoutName.setHint(authUISettings.getNameHint());
 
-            if (authUISettings.isSocialPlatformRequired()) {
-                facebookTv.setText(authUISettings.getFacebookSignupTitle());
-                googleTv.setText(authUISettings.getGoogleSignupTitle());
-            }
-
-            if (authUISettings.isSignupRequired()) {
-                signinSignup.setText(authUISettings.getLoginToggleTitle());
-            }
-            proceed.setText(getString(R.string.signup));
+        if (authUISettings.isSocialPlatformRequired()) {
+            facebookTv.setText(Html.fromHtml(authUISettings.getFacebookSignupTitle()));
+            googleTv.setText(Html.fromHtml(authUISettings.getGoogleSignupTitle()));
         }
+
+        if (authUISettings.isSignupRequired()) {
+            signinSignup.setVisibility(View.VISIBLE);
+            signinSignup.setText(Html.fromHtml(authUISettings.getLoginToggleTitle()));
+        } else {
+            signinSignup.setVisibility(View.GONE);
+        }
+        proceed.setText(getString(R.string.signup));
     }
 
     private void setForgotPasswordView() {
-        if (authUISettings != null) {
-            layoutName.setVisibility(View.GONE);
-            layoutMobile.setVisibility(View.GONE);
-            layoutEmail.setVisibility(View.VISIBLE);
-            layoutPassword.setVisibility(View.GONE);
-            title.setText(authUISettings.getForgotPasswordTitle());
-            belowCont.setVisibility(View.GONE);
-            signinSignup.setVisibility(View.GONE);
-            proceed.setText(getString(R.string.submit));
-        }
+        layoutName.setVisibility(View.GONE);
+        layoutMobile.setVisibility(View.GONE);
+        layoutEmail.setVisibility(View.VISIBLE);
+        layoutPassword.setVisibility(View.GONE);
+        title.setText(Html.fromHtml(authUISettings.getForgotPasswordTitle()));
+        belowCont.setVisibility(View.GONE);
+        signinSignup.setVisibility(View.GONE);
+        fpLink.setVisibility(View.VISIBLE);
+        fpLogin.setText(getString(R.string.loggin));
+        fpSignup.setText(getString(R.string.signup));
+        proceed.setText(getString(R.string.submit));
+        if (!authUISettings.isSignupRequired())
+            fpSignup.setVisibility(View.GONE);
     }
 
     private boolean isSignInValid() {
@@ -401,8 +410,7 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
             validationMessage = "Invalid Password";
         }
 
-        if (validationMessage.length() != 0)
-            showSnackBar(validationMessage);
+        checkErrorMessage(validationMessage);
 
         return validationMessage.length() == 0;
     }
@@ -419,8 +427,7 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
             validationMessage = "Invalid Password";
         }
 
-        if (validationMessage.length() != 0)
-            showSnackBar(validationMessage);
+        checkErrorMessage(validationMessage);
 
         return validationMessage.length() == 0;
     }
@@ -439,10 +446,19 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
             validationMessage = "Invalid Password";
         }
 
-        if (validationMessage.length() != 0)
-            showSnackBar(validationMessage);
+        checkErrorMessage(validationMessage);
 
         return validationMessage.length() == 0;
+    }
+
+    private void checkErrorMessage(String validationMessage) {
+        if (validationMessage.length() != 0) {
+            if (authUISettings.isHandleFormError()) {
+                mListener.onFormValidationError(validationMessage);
+            } else {
+                showSnackBar(validationMessage);
+            }
+        }
     }
 
     private boolean isSignUpValid() {
@@ -530,50 +546,76 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
     }
 
     private void applyTheme() {
-        if (authUISettings != null) {
 
-            MaterialTheme materialTheme = authUISettings.getMaterialTheme();
-            MaterialColor materialColor = materialTheme.getColor();
+        MaterialTheme materialTheme = authUISettings.getMaterialTheme();
+        MaterialColor materialColor = materialTheme.getColor();
 
-            if (authUISettings.getBg() != 0) {
-                bg.setImageResource(authUISettings.getBg());
-            } else {
-                bg.setBackgroundColor(getResources().getColor(materialColor.getRegular()));
-            }
-
-            appLogo.setColorFilter(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
-
-            title.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
-            forgotPassword.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
-            terms.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
-            proceed.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
-
-            email.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
-            mobile.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
-            name.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
-            password.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
-            or.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
-
-            proceed.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
-            proceed.setBackgroundDrawable(selectorBackgroundColor(getResources().getColor(materialColor.getLight()), getResources().getColor(materialColor.getDark())));
-
-            if (materialTheme.equals(MaterialTheme.INDIGO)) {
-                fb.setBackgroundDrawable(selectorBackgroundColor(getResources().getColor(materialColor.getLight()), getResources().getColor(materialColor.getDark())));
-            } else if (materialTheme.equals(MaterialTheme.PINK)) {
-                google.setBackgroundDrawable(selectorBackgroundColor(getResources().getColor(materialColor.getLight()), getResources().getColor(materialColor.getDark())));
-            } else if (materialTheme.equals(MaterialTheme.RED)) {
-                google.setBackgroundDrawable(selectorBackgroundColor(getResources().getColor(materialColor.getLight()), getResources().getColor(materialColor.getDark())));
-            }
-
-            signinSignup.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Window window = getActivity().getWindow();
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(ContextCompat.getColor(getContext(), materialColor.getRegular()));
-            }
-
+        if (authUISettings.getBg() != 0) {
+            bg.setImageResource(authUISettings.getBg());
+        } else {
+            bg.setBackgroundColor(getResources().getColor(materialColor.getRegular()));
         }
+
+//            appLogo.setColorFilter(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+
+        title.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+        forgotPassword.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+        terms.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+        fpLogin.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+        fpSignup.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+        proceed.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+
+        email.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+        mobile.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+        name.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+        password.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+        or.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+
+        proceed.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+        proceed.setBackgroundDrawable(selectorBackgroundColor(getResources().getColor(materialColor.getLight()), getResources().getColor(materialColor.getDark())));
+
+        if (materialTheme.equals(MaterialTheme.INDIGO)) {
+            fb.setBackgroundDrawable(selectorBackgroundColor(getResources().getColor(materialColor.getLight()), getResources().getColor(materialColor.getDark())));
+        } else if (materialTheme.equals(MaterialTheme.PINK)) {
+            google.setBackgroundDrawable(selectorBackgroundColor(getResources().getColor(materialColor.getLight()), getResources().getColor(materialColor.getDark())));
+        } else if (materialTheme.equals(MaterialTheme.RED)) {
+            google.setBackgroundDrawable(selectorBackgroundColor(getResources().getColor(materialColor.getLight()), getResources().getColor(materialColor.getDark())));
+        }
+
+        signinSignup.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextCompat.getColor(getContext(), materialColor.getRegular()));
+        }
+    }
+
+    public AuthUISettings defaultAuthUISettings() {
+        AuthUISettings authUISettings = new AuthUISettings();
+        authUISettings.setSocialPlatformRequired(true);
+        authUISettings.setAppLogoRequired(true);
+        authUISettings.setTermsRequired(true);
+        authUISettings.setSignupRequired(true);
+        authUISettings.setFacebookLoginRequired(true);
+        authUISettings.setGoogleLoginRequired(true);
+        authUISettings.setForgotPasswordRequired(true);
+        authUISettings.setAppLogo(R.mipmap.ic_launcher);
+        authUISettings.setHandleFormError(true);
+        authUISettings.setLoginTitle(getActivity().getString(R.string.login_title));
+        authUISettings.setSignupTitle(getActivity().getString(R.string.signup_title));
+        authUISettings.setForgotPasswordTitle(getActivity().getString(R.string.forgot_password_title));
+        authUISettings.setLoginTerms(getActivity().getString(R.string.loggin_terms));
+        authUISettings.setSignupTerms(getActivity().getString(R.string.signup_terms));
+        authUISettings.setFacebookLoginTitle(getActivity().getString(R.string.login_with_facebook));
+        authUISettings.setFacebookSignupTitle(getActivity().getString(R.string.signup_with_facebook));
+        authUISettings.setGoogleLoginTitle(getActivity().getString(R.string.login_with_google));
+        authUISettings.setGoogleSignupTitle(getActivity().getString(R.string.signup_with_google));
+        authUISettings.setLoginToggleTitle(getActivity().getString(R.string.have_an_account));
+        authUISettings.setSignupToggleTitle(getActivity().getString(R.string.dont_have_account));
+        authUISettings.setDefaultView(AuthUIView.LOGIN);
+        authUISettings.setMaterialTheme(MaterialTheme.WHITE);
+        return authUISettings;
     }
 
 

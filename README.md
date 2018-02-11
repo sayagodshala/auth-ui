@@ -9,7 +9,7 @@ Android App Auth(Login, Signup and Forgot Password) UI
 
 # What's in the box
 
-- The login, signup and forgot password UI framework for your app
+- The login, signup and forgot password UI Template for your app
 - Easy way to implement
 - Play with element visibility
 - Setup material theme like Teal, Cyan, Indigo and many more.
@@ -87,62 +87,70 @@ authUISettings.setSignupToggleTitle("Don\'t have an account? <b>SIGN UP</b>");
 authUISettings.setDefaultView(AuthUIView.LOGIN);
 authUISettings.setMaterialTheme(MaterialTheme.CYAN);
 ```
-Next step is to load the `AuthUIFragment` with settings in your Activity.
+Next step is to load the `AuthUIFragment` in your Activity.
 
 ```java
-AuthUIFragment.loadFragment(this, AuthUIFragment.newInstance(authUISettings), R.id.frame);
+// declare instance of AuthUIFragment
+AuthUIFragment authUIFragment;
+// load fragment with your own settings or default settings
+authUIFragment = AuthUIFragment.newInstance(authUISettings);
+**OR**
+authUIFragment = AuthUIFragment.newInstanceWithDefaultSettings();
+
+// load authUIFragment into the frame layout
+AuthUIFragment.loadFragment(this, authUIFragment, R.id.frame);
+
+
+
 ```
 
 Final step is to implement `AuthUIFragment.AuthUIFragmentListener` interface in your target activity where `AuthUIFragment` is loaded with corresponding methods.
 
 ```java
-public class LoginActivity extends AppCompatActivity implements AuthUIFragment.AuthUIFragmentListener {
+public class LoginActivity extends AppCompatActivity implements AuthUIFragmentListener {
 
     @Override
-        public void onLoginClicked(AuthUIUser user) {
-            ...call your api here in the below cases
-            switch (user.getLoginType()) {
-                case EMAIL:
-                    Log.d("onLoginClicked", "email : " + user.getEmail() + ", password : " + user.getPassword());
-                    break;
-                case MOBILE:
-                    Log.d("onLoginClicked", "mobile : " + user.getMobile() + ", password : " + user.getPassword());
-                    break;
-                case EMAIL_OR_MOBILE:
-                    Log.d("onLoginClicked", "email/mobile : " + user.getEmailOrMobile() + ", password : " + user.getPassword());
-                    break;
-            }
+    public void onLoginClicked(AuthUIUser user) {
+        switch (user.getLoginType()) {
+            case EMAIL:
+                Log.d("onLoginClicked", "email : " + user.getEmail() + ", password : " + user.getPassword());
+                break;
+            case MOBILE:
+                Log.d("onLoginClicked", "mobile : " + user.getMobile() + ", password : " + user.getPassword());
+                break;
+            case EMAIL_OR_MOBILE:
+                Log.d("onLoginClicked", "email/mobile : " + user.getEmailOrMobile() + ", password : " + user.getPassword());
+                break;
         }
+    }
 
-        @Override
-        public void onSignupClicked(AuthUIUser user) {
-            ...call your api here
-            Log.d("onSignupClicked", "name : " + user.getName() + ", email : " + user.getEmail() + ", mobile : " + user.getMobile() + ", password : " + user.getPassword());
-        }
+    @Override
+    public void onSignupClicked(AuthUIUser user) {
+        Log.d("onSignupClicked", "name : " + user.getName() + ", email : " + user.getEmail() + ", mobile : " + user.getMobile() + ", password : " + user.getPassword());
+    }
 
-        @Override
-        public void onForgotPasswordClicked(AuthUIUser user) {
-            ...call your api here
-            Log.d("onForgotPasswordClicked", "email : " + user.getEmail());
-        }
+    @Override
+    public void onForgotPasswordClicked(AuthUIUser user) {
+        Log.d("onForgotPasswordClicked", "email : " + user.getEmail());
+        // on successful response of 'forgot password api' call below method to show login view again
+        authUIFragment.recallLoginView();
+    }
 
-        @Override
-        public void onFacebookClicked(boolean isRegistration) {
-            if(isRegistration){
-                ...signup facebook user(API)
-            } else{
-                ...login facebook user(API)
-            }
+    @Override
+    public void onSocialAccountClicked(SocialAccount socialAccount, boolean isRegistration) {
+        Log.d("onSocialAccountClicked", "socialAccount : " + socialAccount.name() + ", isRegistration : " + isRegistration);
+        switch (socialAccount) {
+            case FACEBOOK:
+                break;
+            case GOOGLE:
+                break;
         }
+    }
 
-        @Override
-        public void onGoogleClicked(boolean isRegistration) {
-            if(isRegistration){
-                ...signup google user(API)
-            } else{
-                ...login google user(API)
-            }
-        }
+    @Override
+    public void onFormValidationError(String error) {
+        Log.d("onFormValidationError", "error : " + error);
+    }
 
 }
 ```
@@ -186,6 +194,13 @@ In case your app only requires one of the below
 authUISettings.setFacebookLoginRequired(false);
 **OR**
 authUISettings.setGoogleLoginRequired(false);
+```
+
+In case you want to handle the form validation error message
+
+```java
+authUISettings.setHandleFormError(true);
+// once it is set to true, implement your logic in 'onFormValidationError(String message)' method of AuthUIFragmentListener interface
 ```
 
 In case your app doesn't require forgot password
