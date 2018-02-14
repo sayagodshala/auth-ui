@@ -556,8 +556,6 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
             bg.setBackgroundColor(getResources().getColor(materialColor.getRegular()));
         }
 
-//            appLogo.setColorFilter(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
-
         title.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
         forgotPassword.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
         terms.setTextColor(ContextCompat.getColor(getContext(), materialColor.getTextPrimaryColor()));
@@ -590,33 +588,5 @@ public class AuthUIFragment extends Fragment implements View.OnClickListener {
             window.setStatusBarColor(ContextCompat.getColor(getContext(), materialColor.getRegular()));
         }
     }
-
-    public AuthUISettings defaultAuthUISettings() {
-        AuthUISettings authUISettings = new AuthUISettings();
-        authUISettings.setSocialPlatformRequired(true);
-        authUISettings.setAppLogoRequired(true);
-        authUISettings.setTermsRequired(true);
-        authUISettings.setSignupRequired(true);
-        authUISettings.setFacebookLoginRequired(true);
-        authUISettings.setGoogleLoginRequired(true);
-        authUISettings.setForgotPasswordRequired(true);
-        authUISettings.setAppLogo(R.mipmap.ic_launcher);
-        authUISettings.setHandleFormError(true);
-        authUISettings.setLoginTitle(getActivity().getString(R.string.login_title));
-        authUISettings.setSignupTitle(getActivity().getString(R.string.signup_title));
-        authUISettings.setForgotPasswordTitle(getActivity().getString(R.string.forgot_password_title));
-        authUISettings.setLoginTerms(getActivity().getString(R.string.loggin_terms));
-        authUISettings.setSignupTerms(getActivity().getString(R.string.signup_terms));
-        authUISettings.setFacebookLoginTitle(getActivity().getString(R.string.login_with_facebook));
-        authUISettings.setFacebookSignupTitle(getActivity().getString(R.string.signup_with_facebook));
-        authUISettings.setGoogleLoginTitle(getActivity().getString(R.string.login_with_google));
-        authUISettings.setGoogleSignupTitle(getActivity().getString(R.string.signup_with_google));
-        authUISettings.setLoginToggleTitle(getActivity().getString(R.string.have_an_account));
-        authUISettings.setSignupToggleTitle(getActivity().getString(R.string.dont_have_account));
-        authUISettings.setDefaultView(AuthUIView.LOGIN);
-        authUISettings.setMaterialTheme(MaterialTheme.WHITE);
-        return authUISettings;
-    }
-
 
 }
