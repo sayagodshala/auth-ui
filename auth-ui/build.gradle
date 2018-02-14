@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/sayagodshala/auth-ui'
     gitUrl = 'https://github.com/sayagodshala/auth-ui.git'
 
-    libraryVersion = '1.2'
+    libraryVersion = '1.2.1'
 
     developerId = 'sayagodshala'
     developerName = 'Saya Godshala'
@@ -55,5 +55,5 @@ dependencies {
 //apply from: '../install.gradle'
 //apply from: '../bintray.gradle'
 
-//apply from: 'https://raw.githubusercontent.com/sayagodshala/common-files/master/install.gradle'
-//apply from: 'https://raw.githubusercontent.com/sayagodshala/common-files/master/bintray.gradle'
+apply from: 'https://raw.githubusercontent.com/sayagodshala/common-files/master/install.gradle'
+apply from: 'https://raw.githubusercontent.com/sayagodshala/common-files/master/bintray.gradle'
