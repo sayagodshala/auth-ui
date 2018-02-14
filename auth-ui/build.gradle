@@ -55,5 +55,5 @@ dependencies {
 //apply from: '../install.gradle'
 //apply from: '../bintray.gradle'
 
-apply from: 'https://raw.githubusercontent.com/sayagodshala/common-files/master/install.gradle'
-apply from: 'https://raw.githubusercontent.com/sayagodshala/common-files/master/bintray.gradle'
+//apply from: 'https://raw.githubusercontent.com/sayagodshala/common-files/master/install.gradle'
+//apply from: 'https://raw.githubusercontent.com/sayagodshala/common-files/master/bintray.gradle'
