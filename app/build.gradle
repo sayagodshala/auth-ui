@@ -4,6 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.sayagodshala.authui.demo"
+        buildToolsVersion "27.0.2"
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
