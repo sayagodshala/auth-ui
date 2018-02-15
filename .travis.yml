@@ -5,6 +5,7 @@ sudo: false
 jdk: oraclejdk8
 
 before_install:
+  - mkdir "$ANDROID_HOME/licenses" || true
   - yes | sdkmanager "platforms;android-27"
 
 android:
@@ -18,9 +19,7 @@ android:
 
 licenses:
   - 'android-sdk-preview-license-.+'
-  - 'android-sdk-preview-license'
   - 'android-sdk-license-.+'
-  - 'android-sdk-license'
   - 'google-gdk-license-.+'
 
 notifications:
