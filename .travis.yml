@@ -31,7 +31,7 @@ script:
 #  file: "Path to a descriptor file, containing information for the Bintray upload"
 #  user: "Bintray user"
 #  key: "Bintray API key"
-#  passphrase: "godshala@1Se9"
+#  passphrase: ""
 #  dry-run: "Optional. If true, skips sending requests to Bintray. Useful for testing your configuration"
 
 cache:
