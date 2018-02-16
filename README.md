@@ -6,6 +6,9 @@ Android App Auth(Login, Signup and Forgot Password) UI
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg?style=flat-square)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![TravisCI](https://travis-ci.org/sayagodshala/auth-ui.svg?branch=master)](https://travis-ci.org/sayagodshala/auth-ui)
 [![API](https://img.shields.io/badge/API-15%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=15)
+[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/sayagodshala)
+
+### You can find Kotlin Version for this library [here](https://github.com/sayagodshala/kotlin-auth-ui/)
 
 # What's in the box
 

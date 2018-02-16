@@ -1,45 +1,30 @@
 language: android
-
 sudo: false
-
 jdk: oraclejdk8
-
 before_install:
-  - mkdir "$ANDROID_HOME/licenses" || true
-  - yes | sdkmanager "platforms;android-27"
-
+- mkdir "$ANDROID_HOME/licenses" || true
+- yes | sdkmanager "platforms;android-27"
 android:
   components:
-    - tools
-    - platform-tools
-    - build-tools-27.0.2
-    - android-27
-    - extra-android-m2repository
-    - extra-google-m2repository
-
+  - tools
+  - platform-tools
+  - build-tools-27.0.2
+  - android-27
+  - extra-android-m2repository
+  - extra-google-m2repository
 licenses:
-  - 'android-sdk-preview-license-.+'
-  - 'android-sdk-license-.+'
-  - 'google-gdk-license-.+'
-
+- android-sdk-preview-license-.+
+- android-sdk-license-.+
+- google-gdk-license-.+
 notifications:
   email: false
-
 env:
-    - GRADLE_OPTS="-Xmx2048M -XX:MaxPermSize=2048m"
-
+- GRADLE_OPTS="-Xmx2048M -XX:MaxPermSize=2048m"
 script:
-  # By default Travis-ci executes './gradlew build connectedCheck' if no 'script:' section found.
-  - ./gradlew build
-#deploy:
-#  provider: bintray
-#  file: "Path to a descriptor file, containing information for the Bintray upload"
-#  user: "Bintray user"
-#  key: "Bintray API key"
-#  passphrase: ""
-#  dry-run: "Optional. If true, skips sending requests to Bintray. Useful for testing your configuration"
-
+- "./gradlew build"
 cache:
   directories:
-   - $HOME/.gradle
-
+  - "$HOME/.gradle"
+#deploy:
+#  key:
+#    secure: hEfLVu/TsFnkmgVTrXlFa+3drqO7eY4eQUvY4M6UwQxa8m5PyWMMjgNcSaiP9ZhXhsYOfLG2HrLaHEsnuAV+Ect/du04VPnKnIoBWrLU3C7agwKmCRl+BaTfpn5iT5Rxa7F9rRB7mbcQaeY/4YzwUtYcoh/st1sgsF9MeKjFfL0arwfcp+O7WAzSNfiTXJdSlPyN/U8ryI7ZS8j6oId2HDcXwk+0Pnw65c6xfZ/3Uu30qaG3UnJhzpZbECk2d4wRmCaZrbkCfmOU5iR5dAhp+vzTP88G78KI89sTpV9Wh1b61le40jCWtxZTAD3YRAlCDoir1ElafoGVSfGOpuT8bPpClwAF0UvybiWh7FGRpm5568d2uctQdibbduxkBbRS7kBZm/EWj9ckVPSpCCbg23iJ1zgTQWTtDNdP8VhqQI4OVfeVT2CkJq4jMuqHoS9HLq6hSbiQbLoUMmN7dg473siJZ09xHXasPd6/OmN5q2K4ASDaGhpBvmGBOLKVtRW7TwV6jaZmQbApHxxfPNrI16cPwqMyLuMQKIKaUubmL9RCZQWhM9gHdmsu0dLvnoHb9s8YALbtJ9teVwKT/lyd+En0qWAmvcgM7KnW7y5iNU/oLeJhumzqWLFjhupqrADJrUhjP4/W1OQkHmK2/SQoXdSPbwaRAlyNgQ5kHXlZak4=
